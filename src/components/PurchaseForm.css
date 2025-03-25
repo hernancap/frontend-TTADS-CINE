@@ -1,0 +1,124 @@
+.purchase-form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+  
+  .purchase-form h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .purchase-form__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: #fff;
+    padding: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .client-data {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .client-data label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .client-data input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 0.3rem;
+  }
+  
+  .seat-selection-container {
+    margin-top: 1rem;
+  }
+  
+  .seat-selection-container h2 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .purchase-button {
+    align-self: center;
+    padding: 0.75rem 1.5rem;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+  
+  .purchase-button:hover {
+    background-color: #45a049;
+    transform: scale(1.02);
+  }
+
+  .price-info,
+.coupon-selection,
+.final-price {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.price-info p,
+.final-price p {
+  font-size: 1.1rem;
+  color: #333;
+  margin: 0;
+}
+
+.price-info strong,
+.final-price strong {
+  color: #222;
+}
+
+.coupon-selection label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  color: #333;
+}
+
+.coupon-selection select {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #333; 
+  color: white;           
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.coupon-selection select:hover,
+.coupon-selection select:focus {
+  border-color: #888;
+}
+
+.final-price p {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #4caf50;
+}
+
+.price-info p {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #000000;
+}

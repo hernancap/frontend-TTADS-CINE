@@ -1,0 +1,73 @@
+.funcion-admin {
+    padding: 1rem;
+    background-color: #fff;
+    color: #000;
+    border-radius: 8px;
+    max-width: 1200px;
+    margin: 1rem auto;
+  }
+  
+  .funcion-admin h2 {
+    margin-bottom: 1rem;
+  }
+  
+  .create-button {
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #1a1a1a;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .create-button:hover {
+    background-color: #333;
+  }
+  
+  .funcion-admin-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .funcion-admin-table th,
+  .funcion-admin-table td {
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    text-align: left;
+  }
+  
+  .funcion-admin-table th {
+    background-color: #f0f0f0;
+  }
+  
+  .actions-header {
+    text-align: right;
+  }
+  
+  .actions-cell {
+    text-align: right;
+  }
+  
+  .funcion-admin-table td button {
+    margin-left: 0.5rem;
+    padding: 0.3rem 0.6rem;
+    background-color: #1a1a1a;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .funcion-admin-table td button:disabled {
+    background-color: #666;
+    cursor: not-allowed;
+  }
+  
+  .funcion-admin-table td button:hover {
+    background-color: #333;
+  }
+  
+  .error {
+    color: red;
+  }
