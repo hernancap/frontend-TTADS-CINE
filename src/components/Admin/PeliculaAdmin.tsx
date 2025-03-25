@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Pelicula } from '../../types';
 import { getPeliculas, deletePelicula } from '../../api/pelicula';
-import MovieForm from './MovieForm';
-import './MovieAdmin.css';
+import PeliculaForm from './PeliculaForm';
+import './PeliculaAdmin.css';
 
-const MovieAdmin = () => {
+const PeliculaAdmin = () => {
   const [peliculas, setPeliculas] = useState<Pelicula[]>([]);
   const [selectedPelicula, setSelectedPelicula] = useState<Pelicula | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -56,13 +56,13 @@ const MovieAdmin = () => {
   };
 
   return (
-    <div className="movie-admin">
+    <div className="pelicula-admin">
       <h2>Administrar Películas</h2>
       {error && <p className="error">{error}</p>}
       <button onClick={handleCreate} className="create-button">
         Crear Nueva Película
       </button>
-      <table className="movie-admin-table">
+      <table className="pelicula-admin-table">
         <thead>
           <tr>
             <th>Título</th>
@@ -83,9 +83,9 @@ const MovieAdmin = () => {
           ))}
         </tbody>
       </table>
-      {showForm && <MovieForm pelicula={selectedPelicula} onClose={handleFormClose} />}
+      {showForm && <PeliculaForm pelicula={selectedPelicula} onClose={handleFormClose} />}
     </div>
   );
 };
 
-export default MovieAdmin;
+export default PeliculaAdmin;

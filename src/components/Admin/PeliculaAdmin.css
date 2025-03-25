@@ -1,4 +1,4 @@
-.movie-admin {
+.pelicula-admin {
     padding: 1rem;
     background-color: #fff;
     color: #000;
@@ -7,7 +7,7 @@
     margin: 1rem auto;
   }
   
-  .movie-admin h2 {
+  .pelicula-admin h2 {
     margin-bottom: 1rem;
   }
   
@@ -25,19 +25,19 @@
     background-color: #333;
   }
   
-  .movie-admin-table {
+  .pelicula-admin-table {
     width: 100%;
     border-collapse: collapse;
   }
   
-  .movie-admin-table th,
-  .movie-admin-table td {
+  .pelicula-admin-table th,
+  .pelicula-admin-table td {
     border: 1px solid #ddd;
     padding: 0.75rem;
     text-align: left;
   }
   
-  .movie-admin-table th {
+  .pelicula-admin-table th {
     background-color: #f0f0f0;
   }
   
@@ -49,7 +49,7 @@
     text-align: right;
   }
   
-  .movie-admin-table td button {
+  .pelicula-admin-table td button {
     margin-left: 0.5rem;
     padding: 0.3rem 0.6rem;
     background-color: #1a1a1a;
@@ -59,7 +59,7 @@
     cursor: pointer;
   }
   
-  .movie-admin-table td button:hover {
+  .pelicula-admin-table td button:hover {
     background-color: #333;
   }
   

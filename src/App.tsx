@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/PeliculasHome/Home';         
-import MovieAdmin from './components/Admin/MovieAdmin'; 
+import PeliculaAdmin from './components/Admin/PeliculaAdmin'; 
 import ActorAdmin from './components/Admin/ActorAdmin'; 
 import SalaAdmin from './components/Admin/SalaAdmin';
 import FuncionAdmin from './components/Admin/FuncionAdmin';
@@ -34,7 +34,7 @@ function App() {
             <Route path="/perfil/cupones" element={<MisCupones />} />
             <Route path="/perfil/favoritos" element={<Favoritos />} />
             <Route element={<AdminRoute />}>
-              <Route path="/admin/peliculas" element={<MovieAdmin />} />
+              <Route path="/admin/peliculas" element={<PeliculaAdmin />} />
               <Route path="/admin/actors" element={<ActorAdmin />} />
               <Route path="/admin/salas" element={<SalaAdmin />} />
               <Route path="/admin/funciones" element={<FuncionAdmin />} />

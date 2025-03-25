@@ -5,7 +5,7 @@ import ActorForm from "./ActorForm";
 import { Pelicula, Actor } from "../../types";
 import { createPelicula, updatePelicula } from "../../api/pelicula";
 import { getActors } from "../../api/actor";
-import "./MovieForm.css";
+import "./PeliculaForm.css";
 import { StylesConfig } from "react-select";
 
 interface Option {
@@ -13,7 +13,7 @@ interface Option {
 	label: string;
 }
 
-interface MovieFormInputs {
+interface PeliculaFormInputs {
 	nombre: string;
 	genero: string;
 	duracion: number;
@@ -24,7 +24,7 @@ interface MovieFormInputs {
 	poster?: FileList;
 }
 
-interface MovieFormProps {
+interface PeliculaFormProps {
 	pelicula: Pelicula | null;
 	onClose: () => void;
 }
@@ -63,7 +63,7 @@ const customSelectStyles: StylesConfig<Option, true> = {
 	}),
 };
 
-const MovieForm: React.FC<MovieFormProps> = ({ pelicula, onClose }) => {
+const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
 	const {
 		register,
 		handleSubmit,
@@ -71,7 +71,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ pelicula, onClose }) => {
 		setValue,
 		getValues,
 		formState: { errors },
-	} = useForm<MovieFormInputs>({
+	} = useForm<PeliculaFormInputs>({
 		defaultValues: pelicula
 			? {
 					nombre: pelicula.nombre,
@@ -114,7 +114,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ pelicula, onClose }) => {
 		}
 	};
 
-	const onSubmit: SubmitHandler<MovieFormInputs & { poster?: FileList }> = async (data) => {
+	const onSubmit: SubmitHandler<PeliculaFormInputs & { poster?: FileList }> = async (data) => {
 		try {
 		  const formData = new FormData();
 		  formData.append("nombre", data.nombre);
@@ -124,8 +124,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ pelicula, onClose }) => {
 		  formData.append("enCartelera", data.enCartelera.toString());
 		  formData.append("proximamente", data.proximamente.toString());
 		  
-		  data.actors.forEach((actor, index) => {
-			formData.append(`actors[${index}]`, actor.id);
+		  data.actors.forEach(actor => {
+			formData.append("actors", actor.id);
 		  });
 	  
 		  if (data.poster && data.poster.length > 0) {
@@ -150,8 +150,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ pelicula, onClose }) => {
 	};
 
 	return (
-		<div className="movie-form-container">
-			<form onSubmit={handleSubmit(onSubmit)} className="movie-form">
+		<div className="pelicula-form-container">
+			<form onSubmit={handleSubmit(onSubmit)} className="pelicula-form">
 				<h3>{pelicula ? "Editar Película" : "Crear Nueva Película"}</h3>
 
 				<div className="form-group">
@@ -288,4 +288,4 @@ const MovieForm: React.FC<MovieFormProps> = ({ pelicula, onClose }) => {
 	);
 };
 
-export default MovieForm;
+export default PeliculaForm;
