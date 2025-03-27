@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import SeatSelection, { Asiento } from "./SeatSelection";
-import { createEntrada } from "../api/entrada";
-import { getFuncion } from "../api/funcion";
-import { getAsientosAvailability } from "../api/sala"; 
-import { getCuponesUser } from "../api/cupon"; 
+import { createEntrada } from "../../api/entrada";
+import { getFuncion } from "../../api/funcion";
+import { getAsientosAvailability } from "../../api/sala"; 
+import { getCuponesUser } from "../../api/cupon"; 
 import "./PurchaseForm.css";
-import { Funcion, Cupon } from "../types";
-import { useAuth } from "../hooks/useAuth"; 
+import { Funcion, Cupon } from "../../types";
+import { useAuth } from "../../hooks/useAuth"; 
 
 const PurchaseForm = () => {
   const { id: funcionId } = useParams<{ id: string }>();
@@ -93,8 +93,18 @@ const PurchaseForm = () => {
           asiento: seatId,
         });
       }
+
+      const item = {
+        id: "entrada-cine", 
+        title: "Entrada Cine",
+        quantity: selectedSeats.length,
+        unit_price: finalPrice / selectedSeats.length, 
+      };
+
+      localStorage.setItem('paymentData', JSON.stringify(item));
+
       alert("Compra realizada con éxito");
-      navigate("/confirmacion");
+      navigate("/pago");
     } catch (error) {
       console.error("Error durante la compra:", error);
       alert("Error al procesar la compra. Intenta nuevamente.");

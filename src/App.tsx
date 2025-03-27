@@ -14,8 +14,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 import Menu from './components/Menu';
 import MovieDetail from './components/PeliculasHome/MovieDetail';
-import PurchaseForm from './components/PurchaseForm';
+import PurchaseForm from './components/CompraEntrada/PurchaseForm';
 import Register from './components/Register';
+import Pago from './components/CompraEntrada/Pago.tsx';
 import './App.css';
 
 function App() {
@@ -28,7 +29,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/pelicula/:id" element={<MovieDetail />} />
           <Route path="/comprar/:id" element={<PurchaseForm />} />
-          <Route path="/register" element={<Register />} />          
+          <Route path="/register" element={<Register />} />   
+          <Route path="/pago" element={<Pago />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/perfil/entradas" element={<MyProfile />} />
             <Route path="/perfil/cupones" element={<MisCupones />} />
