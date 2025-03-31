@@ -1,12 +1,9 @@
 import React from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { Funcion, Pelicula, Sala } from "../../types";
-import {
-	createFuncion,
-	updateFuncion,
-	getPeliculas,
-	getSalas,
-} from "../../api/funcion";
+import { createFuncion,	updateFuncion } from "../../api/funcion";
+import { getPeliculas } from "../../api/pelicula";
+import { getSalas } from "../../api/sala";
 import AsyncSelect from "react-select/async";
 import { StylesConfig } from "react-select";
 import "./FuncionForm.css";

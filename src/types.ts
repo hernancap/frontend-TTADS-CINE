@@ -19,16 +19,13 @@ export interface Actor {
 export interface Sala {
   id: string;
   nombre: string;
-  numFilas: number;
-  asientosPorFila: number;
   asientos: Asiento[];
 }
 
 export interface Asiento {
-  id: string;
+  id?: string;
   fila: string;
   numero: number;
-  isOccupied: boolean;
 }
 
 export interface Funcion {
@@ -37,14 +34,7 @@ export interface Funcion {
   sala: Sala;
   pelicula: Pelicula;
   precio: number;
-  isCancelled: boolean;
-  isActive: boolean;
   entradas?: Entrada[];
-}
-
-export enum UserType {
-  COMUN = 'comun',
-  ADMIN = 'admin'
 }
 
 export interface Cupon {
@@ -53,6 +43,11 @@ export interface Cupon {
   descuento: number;
   fechaExpiracion: string;
   usuario?: Usuario;
+}
+
+export enum UserType {
+  COMUN = 'comun',
+  ADMIN = 'admin'
 }
 
 export interface Usuario {
@@ -66,11 +61,23 @@ export interface Usuario {
   favoritos?: Pelicula[];
 }
 
+export enum EstadoAsiento {
+  DISPONIBLE = "disponible",
+  RESERVADO = "reservado",
+  VENDIDO = "vendido",
+}
+
+export interface AsientoFuncion {
+  id: string; 
+  asiento: Asiento; 
+  estado: EstadoAsiento;
+}
+
 export interface Entrada {
   id: string;
   precio: number;
   fechaCompra: string;
   usuario: Usuario;
   funcion: Funcion;
-  asiento: Asiento;
+  asientoFuncion: AsientoFuncion;
 }

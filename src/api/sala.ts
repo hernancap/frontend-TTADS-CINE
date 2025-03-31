@@ -1,7 +1,7 @@
 import apiClient from './client';
 import { Sala } from '../types';
 import axios from 'axios';
-import { Asiento } from "../types";
+import { AsientoFuncion } from "../types";
 
 interface BackendResponse<T> {
   message: string;
@@ -78,9 +78,9 @@ export const deleteSala = async (id: string): Promise<void> => {
   }
 };
 
-export const getAsientosAvailability = async (funcionId: string): Promise<ApiResponse<Asiento[]>> => {
+export const getAsientosFuncion = async (funcionId: string): Promise<ApiResponse<AsientoFuncion[]>> => {
   try {
-    const response = await apiClient.get<BackendResponse<Asiento[]>>(`/asientos/availability/${funcionId}`);
+    const response = await apiClient.get<BackendResponse<AsientoFuncion[]>>(`/asientofuncion/disponibilidad/${funcionId}`);
     return { data: response.data.data, status: response.status };
   } catch (error) {
     if (axios.isAxiosError(error)) {

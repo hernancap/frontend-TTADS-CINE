@@ -1,73 +1,73 @@
 import { useState } from "react";
 import "./SeatSelection.css";
-
-export interface Asiento {
-	id: string;
-	fila: string;
-	numero: number;
-	isOccupied: boolean;
-}
+import { AsientoFuncion } from "../../types"; 
 
 interface SeatSelectionProps {
-	asientos: Asiento[];
-	onSelectionChange: (selectedIds: string[]) => void;
+  asientos: AsientoFuncion[];
+  onSelectionChange: (selectedIds: string[]) => void;
 }
 
 const SeatSelection = ({ asientos, onSelectionChange }: SeatSelectionProps) => {
 	const [selected, setSelected] = useState<string[]>([]);
-
+  
 	const handleSeatClick = (id: string) => {
-		let updated: string[];
-		if (selected.includes(id)) {
-			updated = selected.filter((seatId) => seatId !== id);
-		} else {
-			updated = [...selected, id];
-		}
-		setSelected(updated);
-		onSelectionChange(updated);
+	  let updated: string[];
+	  if (selected.includes(id)) {
+		updated = selected.filter((seatId) => seatId !== id);
+	  } else {
+		updated = [...selected, id];
+	  }
+	  setSelected(updated);
+	  onSelectionChange(updated);
 	};
-
-	const asientosPorFila = asientos.reduce(
-		(acc: Record<string, Asiento[]>, asiento) => {
-			if (!acc[asiento.fila]) {
-				acc[asiento.fila] = [];
-			}
-			acc[asiento.fila].push(asiento);
-			return acc;
-		},
-		{}
-	);
-
+  
+	const asientosPorFila = asientos.reduce((acc: Record<string, AsientoFuncion[]>, af) => {
+	  const fila = af.asiento.fila;
+	  if (!acc[fila]) {
+		acc[fila] = [];
+	  }
+	  acc[fila].push(af);
+	  return acc;
+	}, {});
+  
 	const filasOrdenadas = Object.keys(asientosPorFila).sort();
-
+  
 	return (
-		<div className="seat-selection">
-			{filasOrdenadas.map((fila) => (
-				<div key={fila} className="seat-row">
-					<span className="row-label">{fila}</span>
-					<div className="seat-row-buttons">
-						{asientosPorFila[fila]
-							.sort((a, b) => a.numero - b.numero)
-							.map((asiento) => (
-								<button
-									type="button"
-									key={asiento.id}
-									className={`seat-button ${
-										selected.includes(asiento.id)
-											? "selected"
-											: ""
-									}`}
-									disabled={asiento.isOccupied}
-									onClick={() => handleSeatClick(asiento.id)}
-								>
-									{`${asiento.fila}${asiento.numero}`}
-								</button>
-							))}
-					</div>
-				</div>
-			))}
-		</div>
+	  <div className="seat-selection">
+		{filasOrdenadas.map((fila) => {
+		  const asientosOrdenados = asientosPorFila[fila].sort((a, b) => a.asiento.numero - b.asiento.numero);
+  
+		  const minNumero = asientosOrdenados.length > 0 ? asientosOrdenados[0].asiento.numero : 1;
+  
+		  return (
+			<div key={fila} className="seat-row">
+			  <span className="row-label">{fila}</span>
+			  <div className="seat-row-buttons">
+				{Array.from({ length: minNumero - 1 }).map((_, index) => (
+				  <span key={`empty-${fila}-${index}`} className="seat-placeholder"></span>
+				))}
+  
+				{asientosOrdenados.map((af) => {
+				  const isSelected = selected.includes(af.id);
+				  const ocupado = af.estado !== "disponible";
+				  return (
+					<button
+					  type="button"
+					  key={af.id}
+					  className={`seat-button ${isSelected ? "selected" : ""}`}
+					  disabled={ocupado}
+					  onClick={() => handleSeatClick(af.id)}
+					>
+					  {`${af.asiento.fila}${af.asiento.numero}`}
+					</button>
+				  );
+				})}
+			  </div>
+			</div>
+		  );
+		})}
+	  </div>
 	);
-};
-
+  };
+  
 export default SeatSelection;

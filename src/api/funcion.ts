@@ -1,5 +1,5 @@
 import apiClient from "./client";
-import { Funcion, Pelicula, Sala } from "../types";
+import { Funcion } from "../types";
 import axios from "axios";
 
 interface BackendResponse<T> {
@@ -77,8 +77,7 @@ export const createFuncion = async (data: {
   precio: number;
 }): Promise<Funcion> => {
   try {
-    const response = await apiClient.post<BackendResponse<Funcion>>(
-      "/funciones",
+    const response = await apiClient.post<BackendResponse<Funcion>>("/funciones",
       {
         fechaHora: data.fechaHora.toISOString(),
         sala: data.sala,
@@ -138,53 +137,5 @@ export const deleteFuncion = async (id: string): Promise<void> => {
       );
     }
     throw new Error("Error desconocido al eliminar la función");
-  }
-};
-
-export const cancelFuncion = async (id: string): Promise<void> => {
-  try {
-    await apiClient.post<BackendResponse<null>>(`/funciones/${id}/cancel`);
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(
-        `API Error: ${error.response?.data?.message || error.message}`
-      );
-    }
-    throw new Error("Error desconocido al cancelar la función");
-  }
-};
-
-// Métodos auxiliares para selects
-export const getPeliculas = async (): Promise<ApiResponse<Pelicula[]>> => {
-  try {
-    const response = await apiClient.get<BackendResponse<Pelicula[]>>("/peliculas");
-    return {
-      data: response.data.data,
-      status: response.status,
-    };
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(
-        `API Error: ${error.response?.data?.message || error.message}`
-      );
-    }
-    throw new Error("Error al cargar películas");
-  }
-};
-
-export const getSalas = async (): Promise<ApiResponse<Sala[]>> => {
-  try {
-    const response = await apiClient.get<BackendResponse<Sala[]>>("/salas");
-    return {
-      data: response.data.data,
-      status: response.status,
-    };
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(
-        `API Error: ${error.response?.data?.message || error.message}`
-      );
-    }
-    throw new Error("Error al cargar salas");
   }
 };

@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import SeatSelection, { Asiento } from "./SeatSelection";
+import SeatSelection from "./SeatSelection";
 import { createEntrada } from "../../api/entrada";
 import { getFuncion } from "../../api/funcion";
-import { getAsientosAvailability } from "../../api/sala"; 
+import { getAsientosFuncion } from "../../api/sala"; 
 import { getCuponesUser } from "../../api/cupon"; 
 import "./PurchaseForm.css";
-import { Funcion, Cupon } from "../../types";
+import { Funcion, Cupon, AsientoFuncion } from "../../types";
 import { useAuth } from "../../hooks/useAuth"; 
 
 const PurchaseForm = () => {
@@ -17,7 +17,7 @@ const PurchaseForm = () => {
   const [clientName, setClientName] = useState(user?.nombre || "");
   const [clientEmail, setClientEmail] = useState(user?.email || "");
 
-  const [availableSeats, setAvailableSeats] = useState<Asiento[]>([]);
+  const [availableSeats, setAvailableSeats] = useState<AsientoFuncion[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   const [funcion, setFuncion] = useState<Funcion>({} as Funcion);
   const [loading, setLoading] = useState(true);
@@ -53,7 +53,7 @@ const PurchaseForm = () => {
         const funcionResponse = await getFuncion(funcionId!);
         setFuncion(funcionResponse.data);
 
-        const asientosResponse = await getAsientosAvailability(funcionId!);
+        const asientosResponse = await getAsientosFuncion(funcionId!);
         setAvailableSeats(asientosResponse.data);
       } catch (error) {
         console.error("Error al obtener función o asientos:", error);

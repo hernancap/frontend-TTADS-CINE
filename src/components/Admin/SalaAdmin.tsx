@@ -66,8 +66,6 @@ const SalaAdmin = () => {
         <thead>
           <tr>
             <th>Nombre</th>
-            <th>Filas</th>
-            <th>Asientos por Fila</th>
             <th className="actions-header">Acciones</th>
           </tr>
         </thead>
@@ -75,8 +73,6 @@ const SalaAdmin = () => {
           {salas.map((sala) => (
             <tr key={sala.id}>
               <td>{sala.nombre}</td>
-              <td>{sala.numFilas}</td>
-              <td>{sala.asientosPorFila}</td>
               <td className="actions-cell">
                 <button onClick={() => handleEdit(sala)}>Editar</button>
                 <button onClick={() => handleDelete(sala.id)}>Eliminar</button>

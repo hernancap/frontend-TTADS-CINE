@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Funcion } from "../../types";
-import { getFunciones, deleteFuncion, cancelFuncion } from "../../api/funcion";
+import { getFunciones, deleteFuncion } from "../../api/funcion";
 import FuncionForm from "./FuncionForm";
 import "./FuncionAdmin.css";
 import { format } from "date-fns";
@@ -49,19 +49,6 @@ const FuncionAdmin = () => {
 		}
 	};
 
-	const handleCancel = async (id: string) => {
-		try {
-			await cancelFuncion(id);
-			loadFunciones();
-		} catch (err: unknown) {
-			if (err instanceof Error) {
-				setError(err.message);
-			} else {
-				setError("Ocurrió un error al cancelar la función");
-			}
-		}
-	};
-
 	const handleEdit = (funcion: Funcion) => {
 		setSelectedFuncion(funcion);
 		setShowForm(true);
@@ -91,7 +78,6 @@ const FuncionAdmin = () => {
 						<th>Sala</th>
 						<th>Fecha y Hora</th>
 						<th>Precio</th>
-						<th>Estado</th>
 						<th className="actions-header">Acciones</th>
 					</tr>
 				</thead>
@@ -102,18 +88,9 @@ const FuncionAdmin = () => {
 							<td>{funcion.sala.nombre}</td>
 							<td>{formatDateFromUTC(funcion.fechaHora)}</td>
 							<td>${funcion.precio}</td>
-							<td>
-								{funcion.isCancelled ? "Cancelada" : "Activa"}
-							</td>
 							<td className="actions-cell">
 								<button onClick={() => handleEdit(funcion)}>
 									Editar
-								</button>
-								<button
-									onClick={() => handleCancel(funcion.id)}
-									disabled={funcion.isCancelled}
-								>
-									Cancelar
 								</button>
 								<button
 									onClick={() => handleDelete(funcion.id)}
