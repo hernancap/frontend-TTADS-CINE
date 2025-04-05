@@ -18,6 +18,7 @@ import PurchaseForm from './components/CompraEntrada/PurchaseForm';
 import Register from './components/Register';
 import Pago from './components/CompraEntrada/Pago.tsx';
 import './App.css';
+import PagoExitoso from './components/CompraEntrada/PagoExitoso.tsx';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/comprar/:id" element={<PurchaseForm />} />
           <Route path="/register" element={<Register />} />   
           <Route path="/pago" element={<Pago />} />
+          <Route path="/pago-exitoso" element={<PagoExitoso />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/perfil/entradas" element={<MyProfile />} />
             <Route path="/perfil/cupones" element={<MisCupones />} />

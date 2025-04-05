@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import SeatSelection from "./SeatSelection";
-import { createEntrada } from "../../api/entrada";
 import { getFuncion } from "../../api/funcion";
 import { getAsientosFuncion } from "../../api/sala"; 
 import { getCuponesUser } from "../../api/cupon"; 
 import "./PurchaseForm.css";
 import { Funcion, Cupon, AsientoFuncion } from "../../types";
 import { useAuth } from "../../hooks/useAuth"; 
+import { createPreference } from "../../api/pago";
 
 const PurchaseForm = () => {
   const { id: funcionId } = useParams<{ id: string }>();
@@ -16,17 +16,14 @@ const PurchaseForm = () => {
 
   const [clientName, setClientName] = useState(user?.nombre || "");
   const [clientEmail, setClientEmail] = useState(user?.email || "");
-
   const [availableSeats, setAvailableSeats] = useState<AsientoFuncion[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   const [funcion, setFuncion] = useState<Funcion>({} as Funcion);
   const [loading, setLoading] = useState(true);
-
   const [cupones, setCupones] = useState<Cupon[]>([]);
   const [selectedCuponId, setSelectedCuponId] = useState<string>("");
 
   const totalPrice = funcion.precio ? funcion.precio * selectedSeats.length : 0;
-
   const selectedCupon = cupones.find(c => c.id === selectedCuponId);
   const finalPrice = selectedCupon
     ? totalPrice - (totalPrice * (selectedCupon.descuento || 0)) / 100
@@ -84,16 +81,6 @@ const PurchaseForm = () => {
     }
 
     try {
-      const precio = funcion.precio;
-      for (const seatId of selectedSeats) {
-        await createEntrada({
-          precio: precio,
-          usuario: user.id,
-          funcion: funcionId!,
-          asiento: seatId,
-        });
-      }
-
       const item = {
         id: "entrada-cine", 
         title: "Entrada Cine",
@@ -101,9 +88,11 @@ const PurchaseForm = () => {
         unit_price: finalPrice / selectedSeats.length, 
       };
 
-      localStorage.setItem('paymentData', JSON.stringify(item));
+      const response = await createPreference([item], user.id, funcionId!, selectedSeats);
+      console.log("Preference creada:", response.preferenceId);
 
-      alert("Compra realizada con éxito");
+      localStorage.setItem('preferenceId', response.preferenceId);
+
       navigate("/pago");
     } catch (error) {
       console.error("Error durante la compra:", error);
@@ -120,38 +109,21 @@ const PurchaseForm = () => {
         <div className="client-data">
           <label>
             Nombre:
-            <input
-              type="text"
-              value={clientName}
-              onChange={(e) => setClientName(e.target.value)}
-              required
-            />
+            <input type="text" value={clientName} onChange={(e) => setClientName(e.target.value)} required />
           </label>
           <label>
             Email:
-            <input
-              type="email"
-              value={clientEmail}
-              onChange={(e) => setClientEmail(e.target.value)}
-              required
-            />
+            <input type="email" value={clientEmail} onChange={(e) => setClientEmail(e.target.value)} required />
           </label>
         </div>
-
         <div className="seat-selection-container">
           <h2>Elige tu(s) asiento(s)</h2>
           <SeatSelection asientos={availableSeats} onSelectionChange={handleSeatSelection} />
         </div>
-
         <div className="price-info">
-          <p>
-            <strong>Precio por entrada:</strong> ${funcion.precio.toFixed(2)}
-          </p>
-          <p>
-            <strong>Precio total:</strong> ${totalPrice.toFixed(2)}
-          </p>
+          <p><strong>Precio por entrada:</strong> ${funcion.precio.toFixed(2)}</p>
+          <p><strong>Precio total:</strong> ${totalPrice.toFixed(2)}</p>
         </div>
-
         <div className="coupon-selection">
           <label>
             Aplica un cupón:
@@ -165,18 +137,12 @@ const PurchaseForm = () => {
             </select>
           </label>
         </div>
-
         {selectedCupon && (
           <div className="final-price">
-            <p>
-              <strong>Total con descuento:</strong> ${finalPrice.toFixed(2)}
-            </p>
+            <p><strong>Total con descuento:</strong> ${finalPrice.toFixed(2)}</p>
           </div>
         )}
-
-        <button type="submit" className="purchase-button">
-          Comprar
-        </button>
+        <button type="submit" className="purchase-button">Comprar</button>
       </form>
     </div>
   );
