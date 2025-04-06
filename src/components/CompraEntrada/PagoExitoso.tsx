@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "./PagoExitoso.css";
+//import { FaCheckCircle } from "react-icons/fa"; 
 
 const PagoExitoso = () => {
   const navigate = useNavigate();
@@ -11,9 +13,11 @@ const PagoExitoso = () => {
   }, [navigate]);
 
   return (
-    <div className="flex flex-col items-center mt-10">
-      <h1 className="text-2xl text-green-600">¡Pago exitoso!</h1>
-      <p>Serás redirigido en breve...</p>
+    <div className="pago-exitoso-container">
+      {/*<FaCheckCircle className="pago-exitoso-icon" /> ¡Pago exitoso!*/}
+      <h1 className="pago-exitoso-title">¡Pago exitoso!</h1>
+      <p className="pago-exitoso-message">Serás redirigido en breve...</p>
+       <div className="pago-exitoso-spinner"></div>
     </div>
   );
 };

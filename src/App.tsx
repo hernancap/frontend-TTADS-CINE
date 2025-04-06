@@ -19,6 +19,7 @@ import Register from './components/Register';
 import Pago from './components/CompraEntrada/Pago.tsx';
 import './App.css';
 import PagoExitoso from './components/CompraEntrada/PagoExitoso.tsx';
+import PagoFallido from './components/CompraEntrada/PagoFallido.tsx';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/register" element={<Register />} />   
           <Route path="/pago" element={<Pago />} />
           <Route path="/pago-exitoso" element={<PagoExitoso />} />
+          <Route path="/pago-fallido" element={<PagoFallido />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/perfil/entradas" element={<MyProfile />} />
             <Route path="/perfil/cupones" element={<MisCupones />} />

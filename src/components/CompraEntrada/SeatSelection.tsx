@@ -3,25 +3,33 @@ import "./SeatSelection.css";
 import { AsientoFuncion } from "../../types"; 
 
 interface SeatSelectionProps {
-  asientos: AsientoFuncion[];
-  onSelectionChange: (selectedIds: string[]) => void;
+  asientosFuncion: AsientoFuncion[];
+  onSelectionChange: (selectedAsientosFuncion: AsientoFuncion[]) => void;
 }
 
-const SeatSelection = ({ asientos, onSelectionChange }: SeatSelectionProps) => {
-	const [selected, setSelected] = useState<string[]>([]);
+const SeatSelection = ({ asientosFuncion, onSelectionChange }: SeatSelectionProps) => {
+	const [selectedIds, setSelectedIds] = useState<string[]>([]);
+	const [selectedAsientosFuncionObjects, setSelectedAsientosFuncionObjects] = useState<AsientoFuncion[]>([]);
   
-	const handleSeatClick = (id: string) => {
-	  let updated: string[];
-	  if (selected.includes(id)) {
-		updated = selected.filter((seatId) => seatId !== id);
+	const handleSeatClick = (asientoFuncion: AsientoFuncion) => {
+	  const id = asientoFuncion.id;
+	  let updatedIds: string[];
+      let updatedObjects: AsientoFuncion[];
+
+	  if (selectedIds.includes(id)) {
+		updatedIds = selectedIds.filter((asientoId) => asientoId !== id);
+      	updatedObjects = selectedAsientosFuncionObjects.filter((asientoFuncion) => asientoFuncion.id !== id);
 	  } else {
-		updated = [...selected, id];
+		updatedIds = [...selectedIds, id];
+      	updatedObjects = [...selectedAsientosFuncionObjects, asientoFuncion];
 	  }
-	  setSelected(updated);
-	  onSelectionChange(updated);
+	  
+	  setSelectedIds(updatedIds);
+      setSelectedAsientosFuncionObjects(updatedObjects);
+      onSelectionChange(updatedObjects);
 	};
   
-	const asientosPorFila = asientos.reduce((acc: Record<string, AsientoFuncion[]>, af) => {
+	const asientosPorFila = asientosFuncion.reduce((acc: Record<string, AsientoFuncion[]>, af) => {
 	  const fila = af.asiento.fila;
 	  if (!acc[fila]) {
 		acc[fila] = [];
@@ -33,41 +41,40 @@ const SeatSelection = ({ asientos, onSelectionChange }: SeatSelectionProps) => {
 	const filasOrdenadas = Object.keys(asientosPorFila).sort();
   
 	return (
-	  <div className="seat-selection">
-		{filasOrdenadas.map((fila) => {
-		  const asientosOrdenados = asientosPorFila[fila].sort((a, b) => a.asiento.numero - b.asiento.numero);
-  
-		  const minNumero = asientosOrdenados.length > 0 ? asientosOrdenados[0].asiento.numero : 1;
-  
-		  return (
-			<div key={fila} className="seat-row">
-			  <span className="row-label">{fila}</span>
-			  <div className="seat-row-buttons">
-				{Array.from({ length: minNumero - 1 }).map((_, index) => (
-				  <span key={`empty-${fila}-${index}`} className="seat-placeholder"></span>
-				))}
-  
-				{asientosOrdenados.map((af) => {
-				  const isSelected = selected.includes(af.id);
-				  const ocupado = af.estado !== "disponible";
-				  return (
-					<button
-					  type="button"
-					  key={af.id}
-					  className={`seat-button ${isSelected ? "selected" : ""}`}
-					  disabled={ocupado}
-					  onClick={() => handleSeatClick(af.id)}
-					>
-					  {`${af.asiento.fila}${af.asiento.numero}`}
-					</button>
-				  );
-				})}
+		<div className="seat-selection">
+		  {filasOrdenadas.map((fila) => {
+			const asientosOrdenados = asientosPorFila[fila].sort((a, b) => a.asiento.numero - b.asiento.numero);
+			const minNumero = asientosOrdenados.length > 0 ? asientosOrdenados[0].asiento.numero : 1;
+	
+			return (
+			  <div key={fila} className="seat-row">
+				<span className="row-label">{fila}</span>
+				<div className="seat-row-buttons">
+				  {Array.from({ length: minNumero - 1 }).map((_, index) => (
+					<span key={`empty-${fila}-${index}`} className="seat-placeholder"></span>
+				  ))}
+	
+				  {asientosOrdenados.map((asientoFuncion) => {
+					const isSelected = selectedIds.includes(asientoFuncion.id);
+					const ocupado = asientoFuncion.estado !== "disponible";
+					return (
+					  <button
+						type="button"
+						key={asientoFuncion.id}
+						className={`seat-button ${isSelected ? "selected" : ""}`}
+						disabled={ocupado}
+						onClick={() => handleSeatClick(asientoFuncion)} 
+					  >
+						{`${asientoFuncion.asiento.fila}${asientoFuncion.asiento.numero}`}
+					  </button>
+					);
+				  })}
+				</div>
 			  </div>
-			</div>
-		  );
-		})}
-	  </div>
-	);
-  };
+			);
+		  })}
+		</div>
+	  );
+	};
   
 export default SeatSelection;

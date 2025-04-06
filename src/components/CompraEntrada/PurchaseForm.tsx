@@ -16,14 +16,14 @@ const PurchaseForm = () => {
 
   const [clientName, setClientName] = useState(user?.nombre || "");
   const [clientEmail, setClientEmail] = useState(user?.email || "");
-  const [availableSeats, setAvailableSeats] = useState<AsientoFuncion[]>([]);
-  const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+  const [availableAsientosFuncion, setAvailableSeats] = useState<AsientoFuncion[]>([]);
+  const [selectedAsientosFuncion, setselectedAsientosFuncion] = useState<AsientoFuncion[]>([]);
   const [funcion, setFuncion] = useState<Funcion>({} as Funcion);
   const [loading, setLoading] = useState(true);
   const [cupones, setCupones] = useState<Cupon[]>([]);
   const [selectedCuponId, setSelectedCuponId] = useState<string>("");
 
-  const totalPrice = funcion.precio ? funcion.precio * selectedSeats.length : 0;
+  const totalPrice = funcion.precio ? funcion.precio * selectedAsientosFuncion.length : 0;
   const selectedCupon = cupones.find(c => c.id === selectedCuponId);
   const finalPrice = selectedCupon
     ? totalPrice - (totalPrice * (selectedCupon.descuento || 0)) / 100
@@ -61,8 +61,8 @@ const PurchaseForm = () => {
     fetchData();
   }, [funcionId]);
 
-  const handleSeatSelection = (selectedIds: string[]) => {
-    setSelectedSeats(selectedIds);
+  const handleSeatSelection = (selectedIds: AsientoFuncion[]) => {
+    setselectedAsientosFuncion(selectedIds);
   };
 
   const handleCouponChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -71,7 +71,7 @@ const PurchaseForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!clientName || !clientEmail || selectedSeats.length === 0) {
+    if (!clientName || !clientEmail || selectedAsientosFuncion.length === 0) {
       alert("Por favor, completa tus datos y selecciona al menos un asiento.");
       return;
     }
@@ -84,14 +84,26 @@ const PurchaseForm = () => {
       const item = {
         id: "entrada-cine", 
         title: "Entrada Cine",
-        quantity: selectedSeats.length,
-        unit_price: finalPrice / selectedSeats.length, 
+        quantity: selectedAsientosFuncion.length,
+        unit_price: finalPrice / selectedAsientosFuncion.length, 
       };
 
-      const response = await createPreference([item], user.id, funcionId!, selectedSeats);
+      const selectedAsientosFuncionIds = selectedAsientosFuncion.map(asientoFuncion => asientoFuncion.id);
+      const response = await createPreference([item], user.id, funcionId!, selectedAsientosFuncionIds);
       console.log("Preference creada:", response.preferenceId);
 
       localStorage.setItem('preferenceId', response.preferenceId);
+
+      localStorage.setItem('compraDetalle', JSON.stringify({
+        pelicula: funcion.pelicula.nombre,
+        horario: funcion.fechaHora,
+        precioPorEntrada: funcion.precio,
+        cantidadEntradas: selectedAsientosFuncion.length,
+        asientosSeleccionados: selectedAsientosFuncion.map(asientoFuncion => `${asientoFuncion.asiento.fila}-${asientoFuncion.asiento.numero}`),
+        precioTotalSinDescuento: totalPrice,
+        cuponSeleccionado: selectedCupon ? { id: selectedCupon.id, descuento: selectedCupon.descuento } : null,
+        precioTotalConDescuento: finalPrice,
+      }));
 
       navigate("/pago");
     } catch (error) {
@@ -118,7 +130,7 @@ const PurchaseForm = () => {
         </div>
         <div className="seat-selection-container">
           <h2>Elige tu(s) asiento(s)</h2>
-          <SeatSelection asientos={availableSeats} onSelectionChange={handleSeatSelection} />
+          <SeatSelection asientosFuncion ={availableAsientosFuncion} onSelectionChange={handleSeatSelection} />
         </div>
         <div className="price-info">
           <p><strong>Precio por entrada:</strong> ${funcion.precio.toFixed(2)}</p>
