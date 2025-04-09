@@ -1,3 +1,10 @@
+export enum Calificacion {
+	ATP = "ATP",
+	M13 = "+13",
+	M16 = "+16",
+	M18 = "+18",
+}
+
 export interface Pelicula {
   id: string;
   nombre: string;
@@ -9,6 +16,8 @@ export interface Pelicula {
   enCartelera: boolean;    
   proximamente: boolean;   
   favoritos?: Usuario[];
+  calificacion: Calificacion;
+  sinopsis: string;
 }
 
 export interface Actor {

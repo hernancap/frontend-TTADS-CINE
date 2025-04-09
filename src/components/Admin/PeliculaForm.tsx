@@ -21,7 +21,9 @@ interface PeliculaFormInputs {
 	actors: Actor[];
 	enCartelera: boolean;
 	proximamente: boolean;
+	calificacion: string;
 	poster?: FileList;
+	sinopsis: string;
 }
 
 interface PeliculaFormProps {
@@ -81,6 +83,8 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
 					actors: pelicula.actors,
 					enCartelera: pelicula.enCartelera,
 					proximamente: pelicula.proximamente,
+                    calificacion: pelicula.calificacion,
+					sinopsis: pelicula.sinopsis,
 			  }
 			: {
 					nombre: "",
@@ -90,6 +94,8 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
 					actors: [],
 					enCartelera: false,
 					proximamente: true,
+                    calificacion: "ATP",
+					sinopsis: "",
 			  },
 	});
 
@@ -123,6 +129,8 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
 		  formData.append("director", data.director);
 		  formData.append("enCartelera", data.enCartelera.toString());
 		  formData.append("proximamente", data.proximamente.toString());
+          formData.append("calificacion", data.calificacion);
+		  formData.append("sinopsis", data.sinopsis.toString());
 		  
 		  data.actors.forEach(actor => {
 			formData.append("actors", actor.id);
@@ -204,6 +212,23 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
 					)}
 				</div>
 
+                <div className="form-group">
+                    <label>Calificación:</label>
+                    <select 
+                        {...register("calificacion", {
+                            required: "La calificación es obligatoria",
+                        })}
+                    >
+                        <option value="ATP">ATP</option>
+                        <option value="+13">+13</option>
+                        <option value="+16">+16</option>
+                        <option value="+18">+18</option>
+                    </select>
+                    {errors.calificacion && (
+                        <span className="error">{errors.calificacion.message}</span>
+                    )}
+                </div>
+
 				<div className="form-group">
 					<label>Actores:</label>
 					<Controller
@@ -243,6 +268,19 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
 					>
 						Crear Actor
 					</button>
+				</div>
+
+				<div className="form-group">
+				  <label>Sinopsis:</label>
+				  <textarea
+				    {...register("sinopsis", {
+				      required: "La sinopsis es obligatoria",
+				    })}
+				    placeholder="Ingrese la sinopsis de la película..."
+				  ></textarea>
+				  {errors.sinopsis && (
+				    <span className="error">{errors.sinopsis.message}</span>
+				  )}
 				</div>
 
 				<div className="form-group">

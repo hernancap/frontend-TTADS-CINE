@@ -1,16 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { Funcion, Pelicula, Sala } from "../../types";
-import { createFuncion,	updateFuncion } from "../../api/funcion";
+import { Pelicula, Sala } from "../../types";
+import { createFuncion } from "../../api/funcion";
 import { getPeliculas } from "../../api/pelicula";
 import { getSalas } from "../../api/sala";
 import AsyncSelect from "react-select/async";
 import { StylesConfig } from "react-select";
 import "./FuncionForm.css";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { parseISO } from 'date-fns';
-import { format as formatTZ, toZonedTime } from 'date-fns-tz';
+import { format, addDays } from "date-fns";
 
 interface Option {
 	value: string;
@@ -18,14 +15,12 @@ interface Option {
 }
 
 interface FuncionFormInputs {
-	fechaHora: string;
-	sala: Option | null; 
+	sala: Option | null;
 	pelicula: Option | null;
 	precio: number;
 }
 
 interface FuncionFormProps {
-	funcion: Funcion | null;
 	onClose: () => void;
 }
 
@@ -43,35 +38,65 @@ const customSelectStyles: StylesConfig<Option> = {
 	}),
 };
 
-const FuncionForm: React.FC<FuncionFormProps> = ({ funcion, onClose }) => {
+const FuncionForm: React.FC<FuncionFormProps> = ({ onClose }) => {
 	const {
 		register,
 		handleSubmit,
 		control,
 		formState: { errors },
 	} = useForm<FuncionFormInputs>({
-		defaultValues: funcion
-			? {
-					fechaHora: new Date(funcion.fechaHora)
-						.toISOString()
-						.slice(0, 16),
-					sala: {
-						value: funcion.sala.id,
-						label: funcion.sala.nombre,
-					},
-					pelicula: {
-						value: funcion.pelicula.id,
-						label: funcion.pelicula.nombre,
-					},
-					precio: funcion.precio,
-			  }
-			: {
-					fechaHora: "",
-					sala: null,
-					pelicula: null,
-					precio: 0,
-			  },
+		defaultValues: {
+			sala: null,
+			pelicula: null,
+			precio: 0,
+		},
 	});
+
+	const [selectedDates, setSelectedDates] = useState<Date[]>([]);
+	const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
+
+	const [daysArray, setDaysArray] = useState<Date[]>([]);
+	useEffect(() => {
+		const today = new Date();
+		const days: Date[] = [];
+		for (let i = 0; i < 14; i++) {
+			days.push(addDays(today, i));
+		}
+		setDaysArray(days);
+	}, []);
+
+	const generateTimesArray = (): string[] => {
+		const times: string[] = [];
+		const startHour = 12;
+		const endHour = 22;
+		for (let hour = startHour; hour <= endHour; hour++) {
+			for (let minute = 0; minute < 60; minute += 20) {
+				if (hour === endHour && minute > 0) break;
+				const timeString = `${hour.toString().padStart(2, "0")}:${minute
+					.toString()
+					.padStart(2, "0")}`;
+				times.push(timeString);
+			}
+		}
+		return times;
+	};
+	const timesArray = generateTimesArray();
+
+	const toggleDateSelection = (day: Date) => {
+		setSelectedDates((prev) => {
+			if (prev.some((d) => format(d, "yyyy-MM-dd") === format(day, "yyyy-MM-dd"))) {
+				return prev.filter((d) => format(d, "yyyy-MM-dd") !== format(day, "yyyy-MM-dd"));
+			} else {
+				return [...prev, day];
+			}
+		});
+	};
+
+	const toggleTimeSelection = (time: string) => {
+		setSelectedTimes((prev) =>
+			prev.includes(time) ? prev.filter((t) => t !== time) : [...prev, time]
+		);
+	};
 
 	const loadPeliculas = async (inputValue: string): Promise<Option[]> => {
 		try {
@@ -108,18 +133,25 @@ const FuncionForm: React.FC<FuncionFormProps> = ({ funcion, onClose }) => {
 	};
 
 	const onSubmit: SubmitHandler<FuncionFormInputs> = async (data) => {
+		if (selectedDates.length === 0 || selectedTimes.length === 0) {
+			alert("Debe seleccionar al menos una fecha y un horario.");
+			return;
+		}
 		try {
-			const funcionData = {
-				fechaHora: new Date(data.fechaHora),
-				sala: data.sala?.value || "", 
-				pelicula: data.pelicula?.value || "", 
-				precio: Number(data.precio),
-			};
+			for (const date of selectedDates) {
+				for (const time of selectedTimes) {
+					const [hours, minutes] = time.split(":").map(Number);
+					const dateTime = new Date(date);
+					dateTime.setHours(hours, minutes, 0, 0);
+					const funcionData = {
+						fechaHora: dateTime,
+						sala: data.sala?.value || "",
+						pelicula: data.pelicula?.value || "",
+						precio: Number(data.precio),
+					};
 
-			if (funcion) {
-				await updateFuncion(funcion.id, funcionData);
-			} else {
-				await createFuncion(funcionData);
+					await createFuncion(funcionData);
+				}
 			}
 			onClose();
 		} catch (error) {
@@ -130,7 +162,7 @@ const FuncionForm: React.FC<FuncionFormProps> = ({ funcion, onClose }) => {
 	return (
 		<div className="funcion-form-container">
 			<form onSubmit={handleSubmit(onSubmit)} className="funcion-form">
-				<h3>{funcion ? "Editar Función" : "Crear Nueva Función"}</h3>
+				<h3>"Crear Nuevas Funciones"</h3>
 
 				<div className="form-group">
 					<label>Sala:</label>
@@ -145,9 +177,7 @@ const FuncionForm: React.FC<FuncionFormProps> = ({ funcion, onClose }) => {
 								cacheOptions
 								defaultOptions
 								loadOptions={loadSalas}
-								onChange={(selected) =>
-									field.onChange(selected)
-								}
+								onChange={(selected) => field.onChange(selected)}
 								value={field.value}
 								placeholder="Buscar sala..."
 							/>
@@ -171,9 +201,7 @@ const FuncionForm: React.FC<FuncionFormProps> = ({ funcion, onClose }) => {
 								cacheOptions
 								defaultOptions
 								loadOptions={loadPeliculas}
-								onChange={(selected) =>
-									field.onChange(selected)
-								}
+								onChange={(selected) => field.onChange(selected)}
 								value={field.value}
 								placeholder="Buscar película..."
 							/>
@@ -183,43 +211,6 @@ const FuncionForm: React.FC<FuncionFormProps> = ({ funcion, onClose }) => {
 						<span className="error">{errors.pelicula.message}</span>
 					)}
 				</div>
-
-				<div className="form-group">
-  <label>Fecha y Hora:</label>
-  <Controller
-    name="fechaHora"
-    control={control}
-    rules={{ required: "Seleccione fecha y hora" }}
-    render={({ field }) => {
-      const timeZone = 'America/Argentina/Buenos_Aires';
-      return (
-        <DatePicker
-          {...field}
-          selected={
-            field.value ? 
-            toZonedTime(parseISO(field.value), timeZone) : 
-            null
-          }
-          onChange={(date) => {
-            if (date) {
-              const utcDate = formatTZ(date, "yyyy-MM-dd'T'HH:mm:ssXXX", {
-                timeZone: 'UTC'
-              });
-              field.onChange(utcDate);
-            }
-          }}
-          showTimeSelect
-          dateFormat="dd/MM/yyyy HH:mm"
-          timeFormat="HH:mm"
-          timeIntervals={15}
-          placeholderText="Seleccione fecha y hora"
-          className="datetime-input"
-          locale="es"
-        />
-      );
-    }}
-  />
-</div>
 
 				<div className="form-group">
 					<label>Precio:</label>
@@ -235,9 +226,49 @@ const FuncionForm: React.FC<FuncionFormProps> = ({ funcion, onClose }) => {
 					)}
 				</div>
 
+				<div className="form-group">
+					<label>Fechas:</label>
+					<div className="button-grid">
+						{daysArray.map((day, index) => (
+							<button
+								type="button"
+								key={index}
+								className={`date-button ${
+									selectedDates.some(
+										(d) => format(d, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")
+									)
+										? "selected"
+										: ""
+								}`}
+								onClick={() => toggleDateSelection(day)}
+							>
+								{format(day, "dd/MM")}
+							</button>
+						))}
+					</div>
+				</div>
+
+				<div className="form-group">
+					<label>Horarios:</label>
+					<div className="button-grid">
+						{timesArray.map((time, index) => (
+							<button
+								type="button"
+								key={index}
+								className={`time-button ${
+									selectedTimes.includes(time) ? "selected" : ""
+								}`}
+								onClick={() => toggleTimeSelection(time)}
+							>
+								{time}
+							</button>
+						))}
+					</div>
+				</div>
+
 				<div className="form-group buttons-group">
 					<button type="submit" className="submit-button">
-						{funcion ? "Guardar Cambios" : "Crear Función"}
+						{"Crear Funciones"}
 					</button>
 					<button
 						type="button"

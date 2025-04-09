@@ -8,9 +8,6 @@ import { toZonedTime } from "date-fns-tz";
 
 const FuncionAdmin = () => {
 	const [funciones, setFunciones] = useState<Funcion[]>([]);
-	const [selectedFuncion, setSelectedFuncion] = useState<Funcion | null>(
-		null
-	);
 	const [showForm, setShowForm] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -49,13 +46,7 @@ const FuncionAdmin = () => {
 		}
 	};
 
-	const handleEdit = (funcion: Funcion) => {
-		setSelectedFuncion(funcion);
-		setShowForm(true);
-	};
-
 	const handleCreate = () => {
-		setSelectedFuncion(null);
 		setShowForm(true);
 	};
 
@@ -89,12 +80,8 @@ const FuncionAdmin = () => {
 							<td>{formatDateFromUTC(funcion.fechaHora)}</td>
 							<td>${funcion.precio}</td>
 							<td className="actions-cell">
-								<button onClick={() => handleEdit(funcion)}>
-									Editar
-								</button>
 								<button
-									onClick={() => handleDelete(funcion.id)}
-								>
+									onClick={() => handleDelete(funcion.id)}>
 									Eliminar
 								</button>
 							</td>
@@ -104,7 +91,6 @@ const FuncionAdmin = () => {
 			</table>
 			{showForm && (
 				<FuncionForm
-					funcion={selectedFuncion}
 					onClose={handleFormClose}
 				/>
 			)}
