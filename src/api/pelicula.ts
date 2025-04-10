@@ -81,3 +81,19 @@ export const deletePelicula = async (id: string): Promise<void> => {
     throw new Error('Unknown error occurred');
   }
 };
+
+export const getReporteFavoritos = async (): Promise<ApiResponse<{ id: string; nombre: string; cantidadFavoritos: number }[]>> => {
+  try {
+    const response = await apiClient.get<BackendResponse<{ id: string; nombre: string; cantidadFavoritos: number }[]>>('/peliculas/reportes/favoritos');
+    return {
+      data: response.data.data,
+      status: response.status
+    };
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(`API Error: ${error.response?.data?.message || error.message}`);
+    }
+    throw new Error('Unknown error occurred');
+  }
+};
+

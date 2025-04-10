@@ -20,6 +20,8 @@ import Pago from './components/CompraEntrada/Pago.tsx';
 import './App.css';
 import PagoExitoso from './components/CompraEntrada/PagoExitoso.tsx';
 import PagoFallido from './components/CompraEntrada/PagoFallido.tsx';
+import ReporteEntradas from './components/Reportes/ReporteEntradas.tsx';
+import ReporteFavoritos from './components/Reportes/ReporteFavoritos.tsx';
 
 function App() {
   return (
@@ -45,6 +47,8 @@ function App() {
               <Route path="/admin/salas" element={<SalaAdmin />} />
               <Route path="/admin/funciones" element={<FuncionAdmin />} />
               <Route path="/admin/usuarios" element={<UsuarioAdmin />} />
+              <Route path="/reportes/entradas" element={<ReporteEntradas />} />
+              <Route path="/reportes/favoritos" element={<ReporteFavoritos />} />
             </Route>
           </Route>
         </Routes>
