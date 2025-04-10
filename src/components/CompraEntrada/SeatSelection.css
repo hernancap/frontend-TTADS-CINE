@@ -1,56 +1,64 @@
 .seat-selection {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin: 1rem 0;
-    color: #333;
-  }
-  
-  .seat-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  
-  .row-label {
-    font-weight: bold;
-    width: 2rem;
-  }
-  
-  .seat-row-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  
-  .seat-button {
-    width: 50px;  
-    height: 50px;
-    border: 1px solid #444;
-    background-color: #222; 
-    color: #eee; 
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-    border-radius: 4px;
-  }
-  
-  .seat-button:not(:disabled):hover {
-    background-color: #333;
-  }
-  
-  .seat-button.selected {
-    background-color: #4caf50;
-    color: #fff;
-  }
-  
-  .seat-button:disabled {
-    background-color: #555;
-    cursor: not-allowed;
-  }
-  
-  .seat-placeholder {
-    display: inline-block;
-    width: 50px; 
-    height: 50px;
-  }
-  
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin: 1rem 0;
+	color: #333;
+	min-width: max-content;
+}
+
+.seat-selection-wrapper {
+	overflow-x: auto;
+	max-width: 100%;
+}
+
+.seat-row {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.row-label {
+	font-weight: bold;
+	width: 2rem;
+}
+
+.seat-row-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.seat-button {
+	width: 40px;
+	height: 40px;
+	border: 1px solid #444;
+	background-color: #222;
+	color: #eee;
+	cursor: pointer;
+	transition: background-color 0.2s ease, transform 0.2s ease;
+	border-radius: 4px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.seat-button:not(:disabled):hover {
+	background-color: #333;
+}
+
+.seat-button.selected {
+	background-color: #4caf50;
+	color: #fff;
+}
+
+.seat-button:disabled {
+	background-color: #555;
+	cursor: not-allowed;
+}
+
+.seat-placeholder {
+	display: inline-block;
+	width: 50px;
+	height: 50px;
+}

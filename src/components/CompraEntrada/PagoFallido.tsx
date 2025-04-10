@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./PagoFallido.css";
-//import { FaTimesCircle } from "react-icons/fa"; // Importa un icono de error de Font Awesome (u otra biblioteca)
+import { FaTimesCircle } from "react-icons/fa";
 
 const PagoFallido = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const PagoFallido = () => {
 
   return (
     <div className="pago-fallido-container">
-      {/*<FaTimesCircle className="pago-fallido-icon" />*/}
+      <FaTimesCircle className="pago-fallido-icon" />
       <h1 className="pago-fallido-title">¡Pago fallido!</h1>
       <p className="pago-fallido-message">Hubo un problema al procesar tu pago, se ha cancelado la compra. Serás redirigido en breve...</p>
       <div className="pago-fallido-spinner"></div>

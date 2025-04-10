@@ -55,6 +55,7 @@ const SalaAsientosAdmin: React.FC<SalaAsientosAdminProps> = ({ numFilas, asiento
   }
 
   return (
+    <div className="admin-seat-grid-wrapper">
     <div className="admin-seat-grid">
       {grid.map(rowObj => (
         <div key={rowObj.row} className="seat-row">
@@ -76,6 +77,7 @@ const SalaAsientosAdmin: React.FC<SalaAsientosAdminProps> = ({ numFilas, asiento
           </div>
         </div>
       ))}
+    </div>
     </div>
   );
 };
