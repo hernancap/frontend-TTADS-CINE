@@ -74,8 +74,8 @@
 	gap: 0.5rem;
 }
 
-.date-button,
-.time-button {
+.funcion-form .date-button,
+.funcion-form .time-button {
 	padding: 0.5rem 1rem;
 	border: 1px solid #ccc;
 	background-color: #fff;

@@ -1,12 +1,40 @@
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import './MisCupones.css';
+import { getMe } from '../../api/usuario.ts';
 
 const MisCupones = () => {
-  const { user } = useAuth();
+  const { user, login, token } = useAuth();
+  const [loading, setLoading] = useState<boolean>(!user);
+  const [error, setError] = useState<string>('');
 
-  if (!user) return <div className="cupon-loading">Cargando cupones...</div>;
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await getMe();
+        login(token!, response.data);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('Error desconocido');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const cupones = user.cupones || [];
+    if (!user || !user.cupones || user.cupones.length === 0) {
+      fetchUserData();
+    } else {
+      setLoading(false);
+    }
+  }, [user, token, login]);
+
+  if (loading) return <div className="cupon-loading">Cargando cupones...</div>;
+  if (error) return <div className="cupon-error">Error: {error}</div>;
+
+  const cupones = user?.cupones || [];
 
   return (
     <div className="cupon-container">

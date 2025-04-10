@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-//import './SalaAsientosAdmin.css';
+import './SalaAsientosAdmin.css';
 
 interface Asiento {
   fila: string;

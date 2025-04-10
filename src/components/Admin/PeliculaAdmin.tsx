@@ -83,7 +83,13 @@ const PeliculaAdmin = () => {
           ))}
         </tbody>
       </table>
-      {showForm && <PeliculaForm pelicula={selectedPelicula} onClose={handleFormClose} />}
+      {showForm && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <PeliculaForm pelicula={selectedPelicula} onClose={handleFormClose} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

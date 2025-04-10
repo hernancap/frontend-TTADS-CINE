@@ -12,6 +12,23 @@ interface ApiResponse<T> {
     status: number;
 }
 
+export const getMe = async (): Promise<ApiResponse<Usuario>> => {
+    try {
+        const response = await apiClient.get<BackendResponse<Usuario>>("/usuarios/me");
+        return {
+            data: response.data.data,
+            status: response.status,
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            throw new Error(
+                `API Error: ${error.response?.data?.message || error.message}`
+            );
+        }
+        throw new Error("Error desconocido al obtener el usuario actual");
+    }
+};
+
 export const getUsuarios = async (): Promise<ApiResponse<Usuario[]>> => {
     try {
         const response = await apiClient.get<BackendResponse<Usuario[]>>("/usuarios");

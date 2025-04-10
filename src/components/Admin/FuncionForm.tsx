@@ -162,8 +162,7 @@ const FuncionForm: React.FC<FuncionFormProps> = ({ onClose }) => {
 	return (
 		<div className="funcion-form-container">
 			<form onSubmit={handleSubmit(onSubmit)} className="funcion-form">
-				<h3>"Crear Nuevas Funciones"</h3>
-
+				<h3>Crear Nuevas Funciones</h3>
 				<div className="form-group">
 					<label>Sala:</label>
 					<Controller

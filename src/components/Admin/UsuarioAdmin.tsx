@@ -88,7 +88,11 @@ const UsuarioAdmin = () => {
         </tbody>
       </table>
       {showForm && (
-        <UsuarioForm usuario={selectedUsuario} onClose={handleFormClose} />
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <UsuarioForm usuario={selectedUsuario} onClose={handleFormClose} />
+          </div>
+        </div>
       )}
     </div>
   );

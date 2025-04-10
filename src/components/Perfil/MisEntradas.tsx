@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import apiClient from '../../api/client';
 import './MisEntradas.css'; 
+import { getMe } from '../../api/usuario.ts';
+import { format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 
 const MyProfile = () => {
   const { user, login, token } = useAuth();
@@ -11,8 +13,8 @@ const MyProfile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await apiClient.get('/usuarios/me');
-        login(token!, response.data.data);
+        const response = await getMe();
+        login(token!, response.data);
       } catch (err: unknown) {
         if (err instanceof Error) {
           setError(err.message);
@@ -39,6 +41,11 @@ const MyProfile = () => {
     new Date(b.fechaCompra).getTime() - new Date(a.fechaCompra).getTime()
   );
 
+  const formatDateFromUTC = (utcDate: string): string => {
+      const date = toZonedTime(utcDate, "America/Argentina/Buenos_Aires");
+      return format(date, "dd/MM/yyyy HH:mm 'hs'");
+  };
+
   return (
     <div className="profile-container">
       <h1 className="profile-title">Mi Perfil</h1>
@@ -48,15 +55,16 @@ const MyProfile = () => {
           {entradasOrdenadas.map((entrada) => (
             <li key={entrada.id} className="entrada-item">
               <p><strong>Película:</strong> {entrada.funcion.pelicula.nombre}</p>
-              <p><strong>Fecha y Hora:</strong> {new Date(entrada.funcion.fechaHora).toLocaleString()}</p>
+              <p><strong>Duración:</strong> {entrada.funcion.pelicula.duracion} minutos</p>
+              <p><strong>Fecha y Hora:</strong> {formatDateFromUTC(entrada.fechaCompra)}</p>
               <p>
-                <strong>Sala:</strong> {entrada.funcion.sala ? entrada.funcion.sala.nombre : 'Sin sala'}
+                <strong>Sala:</strong> {entrada.funcion.sala.nombre}
               </p>
               <p>
-                <strong>Asiento:</strong> {entrada.asiento.fila}{entrada.asiento.numero}
+                <strong>Asiento:</strong> {entrada.asientoFuncion.asiento.fila}{entrada.asientoFuncion.asiento.numero}
               </p>
               <p><strong>Precio:</strong> ${entrada.precio}</p>
-              <p><strong>Comprado:</strong> {new Date(entrada.fechaCompra).toLocaleString()}</p>
+              <p><strong>Comprado:</strong> {formatDateFromUTC(entrada.fechaCompra)}</p>
             </li>
           ))}
         </ul>

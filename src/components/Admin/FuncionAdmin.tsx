@@ -25,7 +25,7 @@ const FuncionAdmin = () => {
 	};
 
   const formatDateFromUTC = (utcDate: string): string => {
-    const date = toZonedTime(utcDate, "UTC");
+    const date = toZonedTime(utcDate, "America/Argentina/Buenos_Aires");
     return format(date, "dd/MM/yyyy HH:mm 'hs'");
 };
 
@@ -90,9 +90,11 @@ const FuncionAdmin = () => {
 				</tbody>
 			</table>
 			{showForm && (
-				<FuncionForm
-					onClose={handleFormClose}
-				/>
+			  <div className="modal-overlay">
+			    <div className="modal-content">
+			      <FuncionForm onClose={handleFormClose} />
+			    </div>
+			  </div>
 			)}
 		</div>
 	);

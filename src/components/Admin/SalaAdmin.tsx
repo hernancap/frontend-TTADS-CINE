@@ -81,7 +81,13 @@ const SalaAdmin = () => {
           ))}
         </tbody>
       </table>
-      {showForm && <SalaForm sala={selectedSala} onClose={handleFormClose} />}
+      {showForm && (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <SalaForm sala={selectedSala} onClose={handleFormClose} />
+        </div>
+      </div>
+    )}
     </div>
   );
 };

@@ -41,7 +41,7 @@ const MovieDetail = () => {
   }, [id]);
 
   const formatDateFromUTC = (utcDate: string): string => {
-    const date = toZonedTime(utcDate, "UTC");
+    const date = toZonedTime(utcDate, "America/Argentina/Buenos_Aires");
     return format(date, "HH:mm 'hs'");
   };
 
@@ -71,8 +71,6 @@ const MovieDetail = () => {
       console.error("Error actualizando favoritos:", error);
     }
   };
-  
-  
 
   if (loading) return <p>Cargando...</p>;
   if (!pelicula) return <p>No se encontró la película.</p>;
@@ -80,15 +78,17 @@ const MovieDetail = () => {
   return (
     <div className="movie-detail">
       <h1>{pelicula.nombre}</h1>
-      <img
-        src={pelicula.poster_path || 'https://via.placeholder.com/300x450'}
-        alt={pelicula.nombre}
-        className="movie-detail-poster"
-      />
+      <img 
+          src={pelicula.poster_path ? `http://localhost:3000/uploads/${pelicula.poster_path}` : 'src/assets/default_poster.jpeg' } 
+          alt={pelicula.nombre}
+          className="movie-detail-poster"
+        />
       <div className="movie-detail-info">
         <p><strong>Género:</strong> {pelicula.genero}</p>
         <p><strong>Duración:</strong> {pelicula.duracion} minutos</p>
         <p><strong>Director:</strong> {pelicula.director}</p>
+        <p><strong>Clasificación:</strong> {pelicula.calificacion}</p>
+        <p><strong>Sinopsis:</strong> {pelicula.sinopsis}</p>
         <div className="actors">
           <strong>Actores:</strong>
           {pelicula.actors.map(actor => (

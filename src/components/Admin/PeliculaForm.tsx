@@ -269,7 +269,6 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
 						Crear Actor
 					</button>
 				</div>
-
 				<div className="form-group">
 				  <label>Sinopsis:</label>
 				  <textarea
@@ -282,15 +281,14 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
 				    <span className="error">{errors.sinopsis.message}</span>
 				  )}
 				</div>
-
-				<div className="form-group">
-					<label>En cartelera</label>
-					<input type="checkbox" {...register("enCartelera")} />
+				
+				<div className="checkbox-wrapper">
+				  <label htmlFor="enCartelera">En cartelera</label>
+				  <input type="checkbox" id="enCartelera" {...register("enCartelera")} />
 				</div>
-
-				<div className="form-group">
-					<label>Próximamente</label>
-					<input type="checkbox" {...register("proximamente")} />
+				<div className="checkbox-wrapper">
+				  <label htmlFor="proximamente">Próximamente</label>
+				  <input type="checkbox" id="proximamente" {...register("proximamente")} />
 				</div>
 
 				<div className="form-group">
@@ -301,7 +299,6 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
 						{...register("poster")}
 					/>
 				</div>
-
 				<div className="form-group buttons-group">
 					<button type="submit" className="submit-button">
 						{pelicula ? "Guardar Cambios" : "Crear Película"}
