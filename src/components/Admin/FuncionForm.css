@@ -95,3 +95,31 @@
 	background-color: #4caf50;
 	color: #fff;
 }
+
+.time-button.disabled {
+	background-color: #f0f0f0;
+	color: #a0a0a0;
+	cursor: not-allowed;
+	border: 1px solid #d0d0d0;
+	opacity: 0.7;
+}
+
+.tipo-select {
+	width: 100%;
+	padding: 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 16px;
+	margin-top: 5px;
+}
+
+.function-info {
+	margin: 15px 0;
+	padding: 10px;
+	background-color: #f8f9fa;
+	border-radius: 4px;
+}
+
+.function-info p {
+	margin: 5px 0;
+}

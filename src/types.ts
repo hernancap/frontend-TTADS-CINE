@@ -37,6 +37,11 @@ export interface Asiento {
   numero: number;
 }
 
+export enum TipoFuncion {
+  SUBTITULADA = "SUBTITULADA",
+  DOBLADA = "DOBLADA / ESPAÑOL",
+}
+
 export interface Funcion {
   id: string;
   fechaHora: string;
@@ -44,6 +49,7 @@ export interface Funcion {
   pelicula: Pelicula;
   precio: number;
   entradas?: Entrada[];
+  tipo: TipoFuncion;
 }
 
 export interface Cupon {

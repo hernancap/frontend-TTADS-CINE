@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Pelicula, Funcion } from '../../types';
+import { Pelicula, Funcion, TipoFuncion } from '../../types';
 import { getPelicula } from '../../api/pelicula';
 import { getFuncionesByPelicula } from '../../api/funcion';
 import { format, addDays, startOfDay, isSameDay } from 'date-fns';
@@ -123,12 +123,36 @@ const MovieDetail = () => {
             ))}
           </div>
           {funcionesFiltradas.length > 0 ? (
-            <div className="horarios-grid">
-              {funcionesFiltradas.map((funcion) => (
-                <Link key={funcion.id} to={`/comprar/${funcion.id}`} className="horario-button">
-                  {formatDateFromUTC(funcion.fechaHora)}
-                </Link>
-              ))}
+            <div className="function-types">
+              {funcionesFiltradas.filter(f => f.tipo === TipoFuncion.DOBLADA ).length > 0 && (
+                <div className="function-type-group">
+                  <h3>{TipoFuncion.DOBLADA}</h3>
+                  <div className="horarios-grid">
+                    {funcionesFiltradas
+                      .filter(f => f.tipo === TipoFuncion.DOBLADA )
+                      .map((funcion) => (
+                        <Link key={funcion.id} to={`/comprar/${funcion.id}`} className="horario-button">
+                          {formatDateFromUTC(funcion.fechaHora)}
+                        </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {funcionesFiltradas.filter(f => f.tipo === TipoFuncion.SUBTITULADA).length > 0 && (
+                <div className="function-type-group">
+                  <h3>{TipoFuncion.SUBTITULADA}</h3>
+                  <div className="horarios-grid">
+                    {funcionesFiltradas
+                      .filter(f => f.tipo === TipoFuncion.SUBTITULADA)
+                      .map((funcion) => (
+                        <Link key={funcion.id} to={`/comprar/${funcion.id}`} className="horario-button">
+                          {formatDateFromUTC(funcion.fechaHora)}
+                        </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <p>No hay funciones disponibles para el día seleccionado.</p>

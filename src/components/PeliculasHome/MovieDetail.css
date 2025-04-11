@@ -98,3 +98,20 @@
 .favorite-button.remove:hover {
 	background-color: #222;
 }
+
+.function-types {
+	width: 100%;
+	margin-top: 20px;
+  }
+  
+  .function-type-group {
+	margin-bottom: 30px;
+  }
+  
+  .function-type-group h3 {
+	color: #b6b6b6;
+	font-size: 1.2rem;
+	margin-bottom: 15px;
+	padding-bottom: 5px;
+	border-bottom: 2px solid #ddd;
+  }

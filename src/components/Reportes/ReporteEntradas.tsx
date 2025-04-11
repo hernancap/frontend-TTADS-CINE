@@ -24,7 +24,7 @@ const ReporteEntradas: React.FC = () => {
         <BarChart data={data} layout="vertical" margin={{ top: 20, right: 30, left: 100, bottom: 20 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis type="number" />
-          <YAxis dataKey="pelicula" type="category" />
+          <YAxis dataKey="pelicula" type="category" tick={{ fill: '#fff' }} />
           <Tooltip />
           <Bar dataKey="cantidad" fill="#8884d8" />
         </BarChart>

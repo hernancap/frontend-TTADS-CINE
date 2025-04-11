@@ -5,9 +5,11 @@ import { getFuncion } from "../../api/funcion";
 import { getAsientosFuncion } from "../../api/sala"; 
 import { getCuponesUser } from "../../api/cupon"; 
 import "./PurchaseForm.css";
-import { Funcion, Cupon, AsientoFuncion } from "../../types";
+import { Funcion, Cupon, AsientoFuncion, TipoFuncion } from "../../types";
 import { useAuth } from "../../hooks/useAuth"; 
 import { createPreference } from "../../api/pago";
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 const PurchaseForm = () => {
   const { id: funcionId } = useParams<{ id: string }>();
@@ -99,7 +101,7 @@ const PurchaseForm = () => {
         horario: funcion.fechaHora,
         precioPorEntrada: funcion.precio,
         cantidadEntradas: selectedAsientosFuncion.length,
-        asientosSeleccionados: selectedAsientosFuncion.map(asientoFuncion => `${asientoFuncion.asiento.fila}-${asientoFuncion.asiento.numero}`),
+        asientosSeleccionados: selectedAsientosFuncion.map(asientoFuncion => `${asientoFuncion.asiento.fila}${asientoFuncion.asiento.numero}`),
         precioTotalSinDescuento: totalPrice,
         cuponSeleccionado: selectedCupon ? { id: selectedCupon.id, descuento: selectedCupon.descuento } : null,
         precioTotalConDescuento: finalPrice,
@@ -127,6 +129,13 @@ const PurchaseForm = () => {
             Email:
             <input type="email" value={clientEmail} onChange={(e) => setClientEmail(e.target.value)} required />
           </label>
+        </div>
+        <div className="function-details">
+          <h2>{funcion.pelicula?.nombre}</h2>
+          <div className="function-info">
+            <p><strong>Tipo de función:</strong> {funcion.tipo === TipoFuncion.DOBLADA ? "DOBLADA / ESPAÑOL" : "SUBTITULADA"}</p>
+            <p><strong>Fecha y hora:</strong> {format(new Date(funcion.fechaHora), "EEEE d 'de' MMMM 'a las' HH:mm 'hs'", { locale: es })}</p>
+          </div>
         </div>
         <div className="seat-selection-container">
           <h2>Elige tu(s) asiento(s)</h2>

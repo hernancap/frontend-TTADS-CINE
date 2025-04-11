@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import "./Pago.css";
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 interface DetalleCompra {
   pelicula?: string;
@@ -61,7 +63,7 @@ const Pago = () => {
               </tr>
               <tr className="detalle-compra-row">
                 <td>Horario:</td>
-                <td>{compraDetalle.horario}</td>
+                <td>{format(new Date(compraDetalle.horario!), "EEEE, d 'de' MMMM 'de' yyyy, HH:mm", { locale: es })}</td>
               </tr>
               <tr className="detalle-compra-row">
                 <td>Precio por entrada:</td>

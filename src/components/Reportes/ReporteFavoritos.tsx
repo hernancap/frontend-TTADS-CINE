@@ -31,7 +31,7 @@ const ReporteFavoritos: React.FC = () => {
         <BarChart data={data} layout="vertical" margin={{ top: 20, right: 30, left: 100, bottom: 20 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis type="number" />
-          <YAxis dataKey="nombre" type="category" />
+          <YAxis dataKey="nombre" type="category" tick={{ fill: '#fff' }}/>
           <Tooltip />
           <Bar dataKey="cantidadFavoritos" fill="#82ca9d" />
         </BarChart>

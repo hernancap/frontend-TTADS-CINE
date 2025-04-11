@@ -1,5 +1,5 @@
 import apiClient from "./client";
-import { Funcion } from "../types";
+import { Funcion, TipoFuncion } from "../types";
 import axios from "axios";
 
 interface BackendResponse<T> {
@@ -17,6 +17,7 @@ interface UpdateFuncionPayload {
   sala?: string;
   pelicula?: string;
   precio?: number;
+  tipo?: TipoFuncion; 
 }
 
 export const getFunciones = async (): Promise<ApiResponse<Funcion[]>> => {
@@ -75,6 +76,7 @@ export const createFuncion = async (data: {
   sala: string;
   pelicula: string;
   precio: number;
+  tipo: TipoFuncion; 
 }): Promise<Funcion> => {
   try {
     const response = await apiClient.post<BackendResponse<Funcion>>("/funciones",
@@ -83,14 +85,13 @@ export const createFuncion = async (data: {
         sala: data.sala,
         pelicula: data.pelicula,
         precio: data.precio,
+        tipo: data.tipo 
       }
     );
     return response.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      throw new Error(
-        `API Error: ${error.response?.data?.message || error.message}`
-      );
+      throw new Error(error.response?.data?.message || error.message);
     }
     throw new Error("Error desconocido al crear la función");
   }
@@ -103,6 +104,7 @@ export const updateFuncion = async (
     sala?: string;
     pelicula?: string;
     precio?: number;
+    tipo?: TipoFuncion; 
   }
 ): Promise<Funcion> => {
   try {
