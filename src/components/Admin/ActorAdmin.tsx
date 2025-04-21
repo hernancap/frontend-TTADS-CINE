@@ -8,6 +8,8 @@ const ActorAdmin = () => {
   const [actors, setActors] = useState<Actor[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   const loadActors = async () => {
     try {
@@ -25,6 +27,17 @@ const ActorAdmin = () => {
   useEffect(() => {
     loadActors();
   }, []);
+
+  useEffect(() => {
+    const totalPages = actors.length === 0 ? 1 : Math.ceil(actors.length / itemsPerPage);
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [actors, currentPage, itemsPerPage]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = actors.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleDelete = async (id: string) => {
     try {
@@ -63,17 +76,44 @@ const ActorAdmin = () => {
           </tr>
         </thead>
         <tbody>
-          {actors.map((actor) => (
-            <tr key={actor.id}>
-              <td>{actor.nombre}</td>
-              <td className="actions-cell">
-                <button onClick={() => handleDelete(actor.id)}>Eliminar</button>
-              </td>
+          {currentItems.length === 0 ? (
+            <tr>
+              <td colSpan={2}>No hay actores</td>
             </tr>
-          ))}
+          ) : (
+            currentItems.map((actor) => (
+              <tr key={actor.id}>
+                <td>{actor.nombre}</td>
+                <td className="actions-cell">
+                  <button onClick={() => handleDelete(actor.id)}>Eliminar</button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
-      {showForm && <ActorForm onClose={handleFormClose} onActorCreated={() => handleFormClose()} />}
+      <div className="pagination">
+        <button 
+          onClick={() => setCurrentPage(prev => prev - 1)} 
+          disabled={currentPage === 1}
+        >
+          Anterior
+        </button>
+        <span>Página {currentPage} de {Math.ceil(actors.length / itemsPerPage) || 1}</span>
+        <button 
+          onClick={() => setCurrentPage(prev => prev + 1)}
+          disabled={currentPage >= Math.ceil(actors.length / itemsPerPage)}
+        >
+          Siguiente
+        </button>
+      </div>
+      {showForm && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <ActorForm onClose={handleFormClose} onActorCreated={handleFormClose} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -9,6 +9,8 @@ const UsuarioAdmin = () => {
   const [selectedUsuario, setSelectedUsuario] = useState<Usuario | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   const loadUsuarios = async () => {
     try {
@@ -26,6 +28,17 @@ const UsuarioAdmin = () => {
   useEffect(() => {
     loadUsuarios();
   }, []);
+
+  useEffect(() => {
+    const totalPages = usuarios.length === 0 ? 1 : Math.ceil(usuarios.length / itemsPerPage);
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [usuarios, currentPage, itemsPerPage]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = usuarios.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleDelete = async (id: string) => {
     try {
@@ -72,21 +85,44 @@ const UsuarioAdmin = () => {
           </tr>
         </thead>
         <tbody>
-          {usuarios.map((usuario) => (
-            <tr key={usuario.id}>
-              <td>{usuario.nombre}</td>
-              <td>{usuario.email}</td>
-              <td>{usuario.tipo}</td>
-              <td className="actions-cell">
-                <button onClick={() => handleEdit(usuario)}>Editar</button>
-                <button onClick={() => handleDelete(usuario.id)}>
-                  Eliminar
-                </button>
-              </td>
+          {currentItems.length === 0 ? (
+            <tr>
+              <td colSpan={4}>No hay usuarios</td>
             </tr>
-          ))}
+          ) : (
+            currentItems.map((usuario) => (
+              <tr key={usuario.id}>
+                <td>{usuario.nombre}</td>
+                <td>{usuario.email}</td>
+                <td>{usuario.tipo}</td>
+                <td className="actions-cell">
+                  <button onClick={() => handleEdit(usuario)}>Editar</button>
+                  <button onClick={() => handleDelete(usuario.id)}>
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
+      <div className="pagination">
+        <button 
+          onClick={() => setCurrentPage(prev => prev - 1)} 
+          disabled={currentPage === 1}
+        >
+          Anterior
+        </button>
+        <span>
+          Página {currentPage} de {Math.ceil(usuarios.length / itemsPerPage) || 1}
+        </span>
+        <button 
+          onClick={() => setCurrentPage(prev => prev + 1)}
+          disabled={currentPage >= Math.ceil(usuarios.length / itemsPerPage)}
+        >
+          Siguiente
+        </button>
+      </div>
       {showForm && (
         <div className="modal-overlay">
           <div className="modal-content">

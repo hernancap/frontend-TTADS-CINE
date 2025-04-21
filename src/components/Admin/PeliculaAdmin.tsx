@@ -10,6 +10,9 @@ const PeliculaAdmin = () => {
   const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+
   const loadPeliculas = async () => {
     try {
       const response = await getPeliculas();
@@ -26,6 +29,17 @@ const PeliculaAdmin = () => {
   useEffect(() => {
     loadPeliculas();
   }, []);
+
+  useEffect(() => {
+    const totalPages = peliculas.length === 0 ? 1 : Math.ceil(peliculas.length / itemsPerPage);
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [peliculas, currentPage, itemsPerPage]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = peliculas.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleDelete = async (id: string) => {
     try {
@@ -71,7 +85,7 @@ const PeliculaAdmin = () => {
           </tr>
         </thead>
         <tbody>
-          {peliculas.map((pelicula) => (
+          {currentItems.map((pelicula) => (
             <tr key={pelicula.id}>
               <td>{pelicula.nombre}</td>
               <td>{pelicula.genero}</td>
@@ -83,6 +97,21 @@ const PeliculaAdmin = () => {
           ))}
         </tbody>
       </table>
+      <div className="pagination">
+        <button 
+          onClick={() => setCurrentPage(prev => prev - 1)} 
+          disabled={currentPage === 1}
+        >
+          Anterior
+        </button>
+        <span>Página {currentPage} de {Math.ceil(peliculas.length / itemsPerPage) || 1}</span>
+        <button 
+          onClick={() => setCurrentPage(prev => prev + 1)}
+          disabled={currentPage >= Math.ceil(peliculas.length / itemsPerPage)}
+        >
+          Siguiente
+        </button>
+      </div>
       {showForm && (
         <div className="modal-overlay">
           <div className="modal-content">
