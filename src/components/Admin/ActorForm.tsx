@@ -2,7 +2,6 @@ import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { createActor } from '../../api/actor';
 import { Actor } from '../../types';
-import './ActorForm.css';
 
 interface ActorFormInputs {
   nombre: string;
@@ -28,19 +27,35 @@ const ActorForm: React.FC<ActorFormProps> = ({ onClose, onActorCreated }) => {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <h3>Crear Actor</h3>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <label>
+    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[1000]">
+      <div className="bg-white p-6 rounded-lg max-w-[400px] w-[90%] mx-auto">
+        <h3 className="text-xl font-semibold mt-0 text-center">Crear Actor</h3>
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
+          <label className="block mb-2">
             Nombre:
             <input
               {...register('nombre', { required: 'El nombre es obligatorio' })}
+              className="w-full px-3 py-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            {errors.nombre && <span className="error">{errors.nombre.message}</span>}
+            {errors.nombre && (
+              <span className="text-red-500 text-sm block mt-1">{errors.nombre.message}</span>
+            )}
           </label>
-          <button type="submit">Crear Actor</button>
-          <button type="button" onClick={onClose}>Cancelar</button>
+          <div className="flex justify-end gap-2">
+            <button 
+              type="submit" 
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:opacity-90 transition-opacity"
+            >
+              Crear Actor
+            </button>
+            <button 
+              type="button" 
+              onClick={onClose}
+              className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition-colors"
+            >
+              Cancelar
+            </button>
+          </div>
         </form>
       </div>
     </div>

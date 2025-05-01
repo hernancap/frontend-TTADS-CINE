@@ -1,78 +1,17 @@
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: block;
-}
+@import "tailwindcss";
 
-.movie-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-  justify-items: center;
-}
+@layer base {
+  :root {
+    color-scheme: dark;
+    background-color: #242424;
+    color: rgba(255, 255, 255, 0.87); 
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-.movie-card {
-  background-color: #fff;
-  color: #000;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 300px;  
-  cursor: pointer;
-}
-
-.movie-card:hover {
-  transform: scale(1.02);
-}
-
-.movie-info {
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.movie-info h3 {
-  margin: 0.5rem 0;
-  font-size: 1.2rem;
-}
-
-.details {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.9rem;
-}
-
-.director {
-  margin: 0.5rem 0;
-  font-size: 0.9rem;
-}
-
-.actors {
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-}
-
-.actor-tag {
-  background-color: #eee;
-  color: #333;
-  border-radius: 4px;
-  padding: 0.2rem 0.4rem;
-  margin-right: 0.3rem;
-  margin-bottom: 0.3rem;
-  display: inline-block;
-}
-
-.movie-poster {
-  width: 100%;
-  max-width: 300px;
-  height: auto;
-  aspect-ratio: 2 / 3; 
-  object-fit: cover;
+  body {
+    font-family: var(--font-sans);
+  }
 }

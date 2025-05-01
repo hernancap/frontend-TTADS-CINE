@@ -5,8 +5,6 @@ import { createFuncion } from "../../api/funcion";
 import { getPeliculas } from "../../api/pelicula";
 import { getSalas } from "../../api/sala";
 import AsyncSelect from "react-select/async";
-import { StylesConfig } from "react-select";
-import "./FuncionForm.css";
 import { format, addDays } from "date-fns";
 
 interface Option {
@@ -25,20 +23,6 @@ interface FuncionFormInputs {
 interface FuncionFormProps {
   onClose: () => void;
 }
-
-const customSelectStyles: StylesConfig<Option> = {
-  control: (provided) => ({
-    ...provided,
-    backgroundColor: "#fff",
-    borderColor: "#ddd",
-    minHeight: "40px",
-    boxShadow: "none",
-  }),
-  menu: (provided) => ({
-    ...provided,
-    zIndex: 9999,
-  }),
-};
 
 const generateTimesArray = (): string[] => {
   const times: string[] = [];
@@ -200,151 +184,164 @@ const FuncionForm: React.FC<FuncionFormProps> = ({ onClose }) => {
     }
   };
 
-	return (
-		<div className="funcion-form-container">
-			<form onSubmit={handleSubmit(onSubmit)} className="funcion-form">
-				<h3>Crear Nuevas Funciones</h3>
-				<div className="form-group">
-					<label>Sala:</label>
-					<Controller
-						name="sala"
-						control={control}
-						rules={{ required: "Seleccione una sala" }}
-						render={({ field }) => (
-							<AsyncSelect<Option>
-								{...field}
-								styles={customSelectStyles}
-								cacheOptions
-								defaultOptions
-								loadOptions={loadSalas}
-								onChange={(selected) => field.onChange(selected)}
-								value={field.value}
-								placeholder="Buscar sala..."
-							/>
-						)}
-					/>
-					{errors.sala && (
-						<span className="error">{errors.sala.message}</span>
-					)}
-				</div>
-
-				<div className="form-group">
-					<label>Pelicula:</label>
-					<Controller
-						name="pelicula"
-						control={control}
-						rules={{ required: "Seleccione una película" }}
-						render={({ field }) => (
-							<AsyncSelect<Option>
-								{...field}
-								styles={customSelectStyles}
-								cacheOptions
-								defaultOptions
-								loadOptions={loadPeliculas}
-								onChange={(selected) => field.onChange(selected)}
-								value={field.value}
-								placeholder="Buscar película..."
-							/>
-						)}
-					/>
-					{errors.pelicula && (
-						<span className="error">{errors.pelicula.message}</span>
-					)}
-				</div>
-
-				<div className="form-group">
-				  <label>Tipo de función:</label>
-				  <select
-				    {...register("tipo", { required: "Seleccione el tipo de función" })}
-				    className="tipo-select"
-				  >
-				    <option value={TipoFuncion.SUBTITULADA}>Subtitulada</option>
-				    <option value={TipoFuncion.DOBLADA}>Doblada / Español</option>
-				  </select>
-				  {errors.tipo && (
-				    <span className="error">{errors.tipo.message}</span>
-				  )}
-				</div>
-
-				<div className="form-group">
-					<label>Precio:</label>
-					<input
-						type="number"
-						{...register("precio", {
-							required: "Ingrese el precio",
-							min: { value: 1, message: "El precio mínimo es 1" },
-						})}
-					/>
-					{errors.precio && (
-						<span className="error">{errors.precio.message}</span>
-					)}
-				</div>
-
-				<div className="form-group">
-					<label>Fechas:</label>
-					<div className="button-grid">
-						{daysArray.map((day, index) => (
-							<button
-								type="button"
-								key={index}
-								className={`date-button ${
-									selectedDates.some(
-										(d) => format(d, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")
-									)
-										? "selected"
-										: ""
-								}`}
-								onClick={() => toggleDateSelection(day)}
-							>
-								{format(day, "dd/MM")}
-							</button>
-						))}
-					</div>
-				</div>
-
-						<div className="form-group">
-        		  <label>Horarios:</label>
-        		  <div className="button-grid">
-        		    {timesArray.map((time, index) => {
-        		      const isBlocked = blockedTimes.has(time) && !selectedTimes.includes(time);
-        		      return (
-        		        <button
-        		          type="button"
-        		          key={index}
-        		          className={`time-button ${
-        		            selectedTimes.includes(time) ? "selected" : ""
-        		          } ${isBlocked ? "disabled" : ""}`}
-        		          onClick={() => toggleTimeSelection(time)}
-        		          disabled={isBlocked}
-        		        >
-        		          {time}
-        		        </button>
-        		      );
-        		    })}
-        		  </div>
-        		</div>
-
-				{submitError && (
-				  <div className="error-message">
-				    ⚠️ {submitError}
-				  </div>
-				)}
-
-				<div className="form-group buttons-group">
-					<button type="submit" className="submit-button">
-						{"Crear Funciones"}
-					</button>
-					<button
-						type="button"
-						onClick={onClose}
-						className="cancel-button"
-					>
-						Cancelar
-					</button>
-				</div>
-			</form>
-		</div>
-	);
+  return (
+    <div className="max-w-md mx-auto p-4 bg-white rounded-lg text-black">
+      <h3 className="text-xl font-semibold mb-4 text-center">Crear Nuevas Funciones</h3>
+      <div className="mb-4">
+        <label className="block font-bold mb-2">Sala:</label>
+        <Controller
+          name="sala"
+          control={control}
+          rules={{ required: "Seleccione una sala" }}
+          render={({ field }) => (
+            <AsyncSelect
+              {...field}
+              cacheOptions
+              defaultOptions
+              loadOptions={loadSalas}
+              onChange={(selected) => field.onChange(selected)}
+              value={field.value}
+              placeholder="Buscar sala..."
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  borderColor: "#ddd",
+                  boxShadow: "none",
+                  minHeight: "40px",
+                }),
+                menu: (base) => ({ ...base, zIndex: 9999 }),
+              }}
+              className="rounded"
+            />
+          )}
+        />
+        {errors.sala && <span className="text-red-500 text-sm mt-1">{errors.sala.message}</span>}
+      </div>
+      <div className="mb-4">
+        <label className="block font-bold mb-2">Película:</label>
+        <Controller
+          name="pelicula"
+          control={control}
+          rules={{ required: "Seleccione una película" }}
+          render={({ field }) => (
+            <AsyncSelect
+              {...field}
+              cacheOptions
+              defaultOptions
+              loadOptions={loadPeliculas}
+              onChange={(selected) => field.onChange(selected)}
+              value={field.value}
+              placeholder="Buscar película..."
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  borderColor: "#ddd",
+                  boxShadow: "none",
+                  minHeight: "40px",
+                }),
+                menu: (base) => ({ ...base, zIndex: 9999 }),
+              }}
+              className="rounded"
+            />
+          )}
+        />
+        {errors.pelicula && <span className="text-red-500 text-sm mt-1">{errors.pelicula.message}</span>}
+      </div>
+      <div className="mb-4">
+        <label className="block font-bold mb-2">Tipo de función:</label>
+        <select
+          {...register("tipo", { required: "Seleccione el tipo de función" })}
+          className="w-full px-3 py-2 border border-gray-300 rounded text-base"
+        >
+          <option value={TipoFuncion.SUBTITULADA}>Subtitulada</option>
+          <option value={TipoFuncion.DOBLADA}>Doblada / Español</option>
+        </select>
+        {errors.tipo && <span className="text-red-500 text-sm mt-1">{errors.tipo.message}</span>}
+      </div>
+      <div className="mb-4">
+        <label className="block font-bold mb-2">Precio:</label>
+        <input
+          type="number"
+          {...register("precio", {
+            required: "Ingrese el precio",
+            min: { value: 1, message: "El precio mínimo es 1" },
+          })}
+          className="w-full px-3 py-2 border border-gray-300 rounded"
+        />
+        {errors.precio && <span className="text-red-500 text-sm mt-1">{errors.precio.message}</span>}
+      </div>
+      <div className="mb-4">
+        <label className="block font-bold mb-2">Fechas:</label>
+        <div className="flex flex-wrap gap-2">
+          {daysArray.map((day, index) => (
+            <button
+              key={index}
+              type="button"
+              className={`
+                px-4 py-2 border border-gray-300 rounded 
+                transition-all hover:bg-gray-100 
+                ${selectedDates.some(d => format(d, "yyyy-MM-dd") === format(day, "yyyy-MM-dd"))
+                  ? "bg-green-500 text-white hover:bg-green-600"
+                  : "bg-white text-gray-700"
+                }
+              `}
+              onClick={() => toggleDateSelection(day)}
+            >
+              {format(day, "dd/MM")}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="mb-4">
+        <label className="block font-bold mb-2">Horarios:</label>
+        <div className="flex flex-wrap gap-2">
+          {timesArray.map((time, index) => {
+            const isBlocked = blockedTimes.has(time) && !selectedTimes.includes(time);
+            return (
+              <button
+                key={index}
+                type="button"
+                className={`
+                  px-4 py-2 border rounded transition-all 
+                  ${isBlocked 
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed opacity-70 border-gray-400" 
+                    : selectedTimes.includes(time) 
+                      ? "bg-green-500 text-white hover:bg-green-600" 
+                      : "bg-white text-gray-700 hover:bg-gray-100 border-gray-300"
+                  }
+                `}
+                onClick={() => !isBlocked && toggleTimeSelection(time)}
+                disabled={isBlocked}
+              >
+                {time}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      {submitError && (
+        <div className="text-red-500 bg-red-100 p-2 rounded my-4">
+          ⚠️ {submitError}
+        </div>
+      )}
+      <div className="flex justify-end gap-2 mt-4">
+        <button 
+          type="submit" 
+          className="px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-700 transition-colors"
+          onClick={handleSubmit(onSubmit)}
+        >
+          Crear Funciones
+        </button>
+        <button
+          type="button"
+          onClick={onClose}
+          className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition-colors"
+        >
+          Cancelar
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default FuncionForm;

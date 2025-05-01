@@ -1,6 +1,5 @@
 import { useState } from "react";
-import "./SeatSelection.css";
-import { AsientoFuncion } from "../../types"; 
+import { AsientoFuncion } from "../../types";
 
 interface SeatSelectionProps {
   asientosFuncion: AsientoFuncion[];
@@ -11,17 +10,18 @@ const SeatSelection = ({ asientosFuncion, onSelectionChange }: SeatSelectionProp
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const handleSeatClick = (asientoFuncion: AsientoFuncion) => {
+    if (asientoFuncion.estado !== "disponible") return;
+
     const id = asientoFuncion.id;
     let updatedIds: string[];
-    let updatedObjects: AsientoFuncion[];
 
     if (selectedIds.includes(id)) {
       updatedIds = selectedIds.filter((asientoId) => asientoId !== id);
-      updatedObjects = asientosFuncion.filter((af) => updatedIds.includes(af.id));
     } else {
       updatedIds = [...selectedIds, id];
-      updatedObjects = [...asientosFuncion.filter((af) => updatedIds.includes(af.id))];
     }
+
+    const updatedObjects = asientosFuncion.filter((af) => updatedIds.includes(af.id));
 
     setSelectedIds(updatedIds);
     onSelectionChange(updatedObjects);
@@ -33,55 +33,84 @@ const SeatSelection = ({ asientosFuncion, onSelectionChange }: SeatSelectionProp
       acc[fila] = [];
     }
     acc[fila].push(af);
+    acc[fila].sort((a, b) => a.asiento.numero - b.asiento.numero);
     return acc;
   }, {});
 
   const filasOrdenadas = Object.keys(asientosPorFila).sort();
-  const numeroMinGlobal = Math.min(...asientosFuncion.map(a => a.asiento.numero));
-  const numeroMaxGlobal = Math.max(...asientosFuncion.map(a => a.asiento.numero));
+
+  const numerosAsiento = asientosFuncion.map(a => a.asiento.numero);
+  const numeroMinGlobal = numerosAsiento.length > 0 ? Math.min(...numerosAsiento) : 1;
+  const numeroMaxGlobal = numerosAsiento.length > 0 ? Math.max(...numerosAsiento) : 1;
+
+  const baseButtonClasses = "w-10 h-10 border border-neutral-600 bg-neutral-800 text-neutral-200 rounded flex items-center justify-center text-xs font-medium transition duration-150 ease-in-out cursor-pointer";
+  const hoverAvailableClasses = "hover:bg-neutral-700 hover:border-neutral-500";
+  const selectedButtonClasses = "bg-green-600 text-white border-green-700 hover:bg-green-700"; 
+  const disabledButtonClasses = "bg-neutral-600/50 border-neutral-700 text-neutral-400/60 cursor-not-allowed";
 
   return (
-    <div className="seat-selection-wrapper">
-      <div className="seat-selection">
-        {filasOrdenadas.map((fila) => {
-          const asientosOrdenados = asientosPorFila[fila].sort((a, b) => a.asiento.numero - b.asiento.numero);
+    <div className="overflow-x-auto max-w-full bg-gray-200 p-4 rounded-md shadow-inner"> 
+      <div className="flex flex-col gap-3 my-2 min-w-max"> 
+        {filasOrdenadas.map((fila) => (
+          <div key={fila} className="flex items-center gap-2">
+            <span className="font-bold w-8 text-center text-sm text-gray-600">{fila}</span>
+            <div className="flex flex-nowrap gap-2"> 
+              {Array.from({ length: numeroMaxGlobal - numeroMinGlobal + 1 }, (_, i) => {
+                const numeroActual = numeroMinGlobal + i;
+                const asientoFuncion = asientosPorFila[fila]?.find(a => a.asiento.numero === numeroActual);
 
-          return (
-            <div key={fila} className="seat-row">
-              <span className="row-label">{fila}</span>
-              <div className="seat-row-buttons">
-                {Array.from({ length: numeroMaxGlobal - numeroMinGlobal + 1 }, (_, i) => {
-                  const numeroActual = numeroMinGlobal + i;
-                  const asientoFuncion = asientosOrdenados.find(a => a.asiento.numero === numeroActual);
-
-                  if (!asientoFuncion) {
-                    return (
-                      <span
-                        key={`placeholder-${fila}-${numeroActual}`}
-                        className="seat-placeholder"
-                      />
-                    );
-                  }
-
-                  const isSelected = selectedIds.includes(asientoFuncion.id);
-                  const ocupado = asientoFuncion.estado !== "disponible";
-
+                if (!asientoFuncion) {
                   return (
-                    <button
-                      type="button"
-                      key={asientoFuncion.id}
-                      className={`seat-button ${isSelected ? "selected" : ""}`}
-                      disabled={ocupado}
-                      onClick={() => handleSeatClick(asientoFuncion)} 
-                    >
-                      {`${asientoFuncion.asiento.fila}${asientoFuncion.asiento.numero}`}
-                    </button>
+                    <span
+                      key={`placeholder-${fila}-${numeroActual}`}
+                      className="inline-block w-10 h-10 rounded opacity-0"
+                    />
                   );
-                })}
-              </div>
+                }
+
+                const isSelected = selectedIds.includes(asientoFuncion.id);
+                const isOccupied = asientoFuncion.estado !== "disponible";
+
+                const buttonClasses = `
+                  ${baseButtonClasses}
+                  ${isOccupied
+                    ? disabledButtonClasses
+                    : isSelected
+                      ? selectedButtonClasses
+                      : hoverAvailableClasses 
+                  }
+                `;
+
+                return (
+                  <button
+                    type="button"
+                    key={asientoFuncion.id}
+                    className={buttonClasses}
+                    disabled={isOccupied}
+                    onClick={() => handleSeatClick(asientoFuncion)}
+                    aria-label={`Asiento ${fila}${asientoFuncion.asiento.numero} - ${isOccupied ? 'Ocupado' : isSelected ? 'Seleccionado' : 'Disponible'}`}
+                  >
+                    {asientoFuncion.asiento.numero}
+                  </button>
+                );
+              })}
             </div>
-          );
-        })}
+          </div>
+        ))}
+         <div className="flex flex-wrap gap-x-4 gap-y-1 justify-center mt-4 pt-3 border-t border-gray-300">
+            <div className="flex items-center gap-1">
+                <span className="w-4 h-4 rounded border border-neutral-600 bg-neutral-800 inline-block"></span>
+                <span className="text-xs text-gray-600">Disponible</span>
+            </div>
+            <div className="flex items-center gap-1">
+                <span className="w-4 h-4 rounded border border-green-700 bg-green-600 inline-block"></span>
+                <span className="text-xs text-gray-600">Seleccionado</span>
+            </div>
+            <div className="flex items-center gap-1">
+                <span className="w-4 h-4 rounded border border-neutral-700 bg-neutral-600/50 inline-block"></span>
+                <span className="text-xs text-gray-600">Ocupado</span>
+            </div>
+        </div>
       </div>
     </div>
   );

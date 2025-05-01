@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Funcion } from "../../types";
 import { getFunciones, deleteFuncion } from "../../api/funcion";
 import FuncionForm from "./FuncionForm";
-import "./FuncionAdmin.css";
 import { format } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
 
@@ -69,36 +68,42 @@ const FuncionAdmin = () => {
   };
 
   return (
-    <div className="funcion-admin">
-      <h2>Administrar Funciones</h2>
-      {error && <p className="error">{error}</p>}
-      <button onClick={handleCreate} className="create-button">
+    <div className="p-4 bg-white text-black rounded-lg max-w-[1200px] mx-auto my-4">
+      <h2 className="text-2xl mb-4">Administrar Funciones</h2>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      <button 
+        onClick={handleCreate} 
+        className="px-4 py-2 mb-4 bg-gray-900 text-white rounded hover:bg-gray-700 transition-colors"
+      >
         Crear Nueva Función
       </button>
-      <table className="funcion-admin-table">
+      <table className="w-full border-collapse">
         <thead>
           <tr>
-            <th>Película</th>
-            <th>Sala</th>
-            <th>Fecha y Hora</th>
-            <th>Precio</th>
-            <th className="actions-header">Acciones</th>
+            <th className="border p-3 bg-gray-100">Película</th>
+            <th className="border p-3 bg-gray-100">Sala</th>
+            <th className="border p-3 bg-gray-100">Fecha y Hora</th>
+            <th className="border p-3 bg-gray-100">Precio</th>
+            <th className="border p-3 bg-gray-100 text-right">Acciones</th>
           </tr>
         </thead>
         <tbody>
           {currentItems.length === 0 ? (
             <tr>
-              <td colSpan={5}>No hay funciones</td>
+              <td colSpan={5} className="border p-3 text-center">No hay funciones</td>
             </tr>
           ) : (
             currentItems.map((funcion) => (
               <tr key={funcion.id}>
-                <td>{funcion.pelicula.nombre}</td>
-                <td>{funcion.sala.nombre}</td>
-                <td>{formatDateFromUTC(funcion.fechaHora)}</td>
-                <td>${funcion.precio}</td>
-                <td className="actions-cell">
-                  <button onClick={() => handleDelete(funcion.id)}>
+                <td className="border p-3">{funcion.pelicula.nombre}</td>
+                <td className="border p-3">{funcion.sala.nombre}</td>
+                <td className="border p-3">{formatDateFromUTC(funcion.fechaHora)}</td>
+                <td className="border p-3">${funcion.precio}</td>
+                <td className="border p-3 text-right">
+                  <button 
+                    onClick={() => handleDelete(funcion.id)}
+                    className="ml-2 px-3 py-1 bg-gray-900 text-white rounded hover:bg-gray-700 transition-colors"
+                  >
                     Eliminar
                   </button>
                 </td>
@@ -107,26 +112,26 @@ const FuncionAdmin = () => {
           )}
         </tbody>
       </table>
-      <div className="pagination">
-        <button
+      <div className="flex justify-center gap-4 mt-4">
+        <button 
           onClick={() => setCurrentPage(prev => prev - 1)}
           disabled={currentPage === 1}
+          className="px-4 py-2 bg-gray-900 text-white rounded disabled:bg-gray-600 disabled:cursor-not-allowed"
         >
           Anterior
         </button>
-        <span>
-          Página {currentPage} de {Math.ceil(funciones.length / itemsPerPage) || 1}
-        </span>
-        <button
+        <span>Página {currentPage} de {Math.ceil(funciones.length / itemsPerPage) || 1}</span>
+        <button 
           onClick={() => setCurrentPage(prev => prev + 1)}
           disabled={currentPage >= Math.ceil(funciones.length / itemsPerPage)}
+          className="px-4 py-2 bg-gray-900 text-white rounded disabled:bg-gray-600 disabled:cursor-not-allowed"
         >
           Siguiente
         </button>
       </div>
       {showForm && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-xl shadow-xl max-w-[600px] w-full">
             <FuncionForm onClose={handleFormClose} />
           </div>
         </div>

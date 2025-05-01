@@ -5,322 +5,281 @@ import ActorForm from "./ActorForm";
 import { Pelicula, Actor } from "../../types";
 import { createPelicula, updatePelicula } from "../../api/pelicula";
 import { getActors } from "../../api/actor";
-import "./PeliculaForm.css";
-import { StylesConfig } from "react-select";
 
 interface Option {
-	value: string;
-	label: string;
+  value: string;
+  label: string;
 }
 
 interface PeliculaFormInputs {
-	nombre: string;
-	genero: string;
-	duracion: number;
-	director: string;
-	actors: Actor[];
-	enCartelera: boolean;
-	proximamente: boolean;
-	calificacion: string;
-	poster?: FileList;
-	sinopsis: string;
+  nombre: string;
+  genero: string;
+  duracion: number;
+  director: string;
+  actors: Actor[];
+  enCartelera: boolean;
+  proximamente: boolean;
+  calificacion: string;
+  poster?: FileList;
+  sinopsis: string;
 }
 
 interface PeliculaFormProps {
-	pelicula: Pelicula | null;
-	onClose: () => void;
+  pelicula: Pelicula | null;
+  onClose: () => void;
 }
 
-const customSelectStyles: StylesConfig<Option, true> = {
-	control: (provided) => ({
-		...provided,
-		backgroundColor: "#fff",
-		borderColor: "#ddd",
-		minHeight: "40px",
-		boxShadow: "none",
-	}),
-	input: (provided) => ({
-		...provided,
-		color: "#000",
-	}),
-	placeholder: (provided) => ({
-		...provided,
-		color: "#666",
-	}),
-	singleValue: (provided) => ({
-		...provided,
-		color: "#000",
-	}),
-	multiValue: (provided) => ({
-		...provided,
-		backgroundColor: "#eee",
-	}),
-	multiValueLabel: (provided) => ({
-		...provided,
-		color: "#333",
-	}),
-	menu: (provided) => ({
-		...provided,
-		zIndex: 9999,
-	}),
-};
-
 const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
-	const {
-		register,
-		handleSubmit,
-		control,
-		setValue,
-		getValues,
-		formState: { errors },
-	} = useForm<PeliculaFormInputs>({
-		defaultValues: pelicula
-			? {
-					nombre: pelicula.nombre,
-					genero: pelicula.genero,
-					duracion: Number(pelicula.duracion),
-					director: pelicula.director,
-					actors: pelicula.actors,
-					enCartelera: pelicula.enCartelera,
-					proximamente: pelicula.proximamente,
-                    calificacion: pelicula.calificacion,
-					sinopsis: pelicula.sinopsis,
-			  }
-			: {
-					nombre: "",
-					genero: "",
-					duracion: 0,
-					director: "",
-					actors: [],
-					enCartelera: false,
-					proximamente: true,
-                    calificacion: "ATP",
-					sinopsis: "",
-			  },
-	});
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm<PeliculaFormInputs>({
+    defaultValues: pelicula
+      ? {
+          nombre: pelicula.nombre,
+          genero: pelicula.genero,
+          duracion: Number(pelicula.duracion),
+          director: pelicula.director,
+          actors: pelicula.actors,
+          enCartelera: pelicula.enCartelera,
+          proximamente: pelicula.proximamente,
+          calificacion: pelicula.calificacion,
+          sinopsis: pelicula.sinopsis,
+        }
+      : {
+          nombre: "",
+          genero: "",
+          duracion: 0,
+          director: "",
+          actors: [],
+          enCartelera: false,
+          proximamente: true,
+          calificacion: "ATP",
+          sinopsis: "",
+        },
+  });
 
-	const [isActorModalOpen, setIsActorModalOpen] = useState(false);
+  const [isActorModalOpen, setIsActorModalOpen] = useState(false);
 
-	const loadActorOptions = async (inputValue: string): Promise<Option[]> => {
-		try {
-			const actors: Actor[] = await getActors();
-			return actors
-				.filter((actor) =>
-					actor.nombre
-						.toLowerCase()
-						.includes(inputValue.toLowerCase())
-				)
-				.map((actor) => ({
-					value: actor.id,
-					label: actor.nombre,
-				}));
-		} catch (error) {
-			console.error(error);
-			return [];
-		}
-	};
+  const loadActorOptions = async (inputValue: string): Promise<Option[]> => {
+    try {
+      const actors: Actor[] = await getActors();
+      return actors
+        .filter((actor) =>
+          actor.nombre.toLowerCase().includes(inputValue.toLowerCase())
+        )
+        .map((actor) => ({
+          value: actor.id,
+          label: actor.nombre,
+        }));
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  };
 
-	const onSubmit: SubmitHandler<PeliculaFormInputs & { poster?: FileList }> = async (data) => {
-		try {
-		  const formData = new FormData();
-		  formData.append("nombre", data.nombre);
-		  formData.append("genero", data.genero);
-		  formData.append("duracion", data.duracion.toString());
-		  formData.append("director", data.director);
-		  formData.append("enCartelera", data.enCartelera.toString());
-		  formData.append("proximamente", data.proximamente.toString());
-          formData.append("calificacion", data.calificacion);
-		  formData.append("sinopsis", data.sinopsis.toString());
-		  
-		  data.actors.forEach(actor => {
-			formData.append("actors", actor.id);
-		  });
-	  
-		  if (data.poster && data.poster.length > 0) {
-			formData.append("poster", data.poster[0]);
-		  }
-	  
-		  if (pelicula) {
-			await updatePelicula(pelicula.id, formData);
-		  } else {
-			await createPelicula(formData);
-		  }
-		  onClose();
-		} catch (error) {
-		  console.error(error);
-		}
-	  };
-  
+  const onSubmit: SubmitHandler<PeliculaFormInputs> = async (data) => {
+    try {
+      const formData = new FormData();
+      formData.append("nombre", data.nombre);
+      formData.append("genero", data.genero);
+      formData.append("duracion", data.duracion.toString());
+      formData.append("director", data.director);
+      formData.append("enCartelera", data.enCartelera.toString());
+      formData.append("proximamente", data.proximamente.toString());
+      formData.append("calificacion", data.calificacion);
+      formData.append("sinopsis", data.sinopsis.toString());
+      data.actors.forEach((actor) => formData.append("actors", actor.id));
+      if (data.poster && data.poster.length > 0) {
+        formData.append("poster", data.poster[0]);
+      }
+      if (pelicula) {
+		await updatePelicula(pelicula.id, formData);
+	  } else {
+		await createPelicula(formData);
+	  }
+      onClose();
+    } catch (error) {
+      console.error("Error al guardar:", error);
+    }
+  };
 
-	const handleActorCreated = (newActor: Actor) => {
-		const currentActors = getValues("actors") || [];
-		setValue("actors", [...currentActors, newActor]);
-	};
-
-	return (
-		<div className="pelicula-form-container">
-			<form onSubmit={handleSubmit(onSubmit)} className="pelicula-form">
-				<h3>{pelicula ? "Editar Película" : "Crear Nueva Película"}</h3>
-
-				<div className="form-group">
-					<label>Nombre:</label>
-					<input
-						{...register("nombre", {
-							required: "El nombre es obligatorio",
-						})}
-					/>
-					{errors.nombre && (
-						<span className="error">{errors.nombre.message}</span>
-					)}
-				</div>
-
-				<div className="form-group">
-					<label>Género:</label>
-					<input
-						{...register("genero", {
-							required: "El género es obligatorio",
-						})}
-					/>
-					{errors.genero && (
-						<span className="error">{errors.genero.message}</span>
-					)}
-				</div>
-
-				<div className="form-group">
-					<label>Duración (minutos):</label>
-					<input
-						type="number"
-						{...register("duracion", {
-							required: "La duración es obligatoria",
-							valueAsNumber: true,
-						})}
-					/>
-					{errors.duracion && (
-						<span className="error">{errors.duracion.message}</span>
-					)}
-				</div>
-
-				<div className="form-group">
-					<label>Director:</label>
-					<input
-						{...register("director", {
-							required: "El director es obligatorio",
-						})}
-					/>
-					{errors.director && (
-						<span className="error">{errors.director.message}</span>
-					)}
-				</div>
-
-                <div className="form-group">
-                    <label>Calificación:</label>
-                    <select 
-                        {...register("calificacion", {
-                            required: "La calificación es obligatoria",
-                        })}
-                    >
-                        <option value="ATP">ATP</option>
-                        <option value="+13">+13</option>
-                        <option value="+16">+16</option>
-                        <option value="+18">+18</option>
-                    </select>
-                    {errors.calificacion && (
-                        <span className="error">{errors.calificacion.message}</span>
-                    )}
-                </div>
-
-				<div className="form-group">
-					<label>Actores:</label>
-					<Controller
-						control={control}
-						name="actors"
-						render={({ field: { onChange, value } }) => (
-							<AsyncSelect<Option, true>
-								cacheOptions
-								defaultOptions
-								isMulti
-								loadOptions={loadActorOptions}
-								styles={customSelectStyles}
-								onChange={(selectedOptions) =>
-									onChange(
-										selectedOptions.map((option) => ({
-											id: option.value,
-											nombre: option.label,
-										}))
-									)
-								}
-								value={
-									Array.isArray(value)
-										? value.map((actor: Actor) => ({
-												value: actor.id,
-												label: actor.nombre,
-										  }))
-										: []
-								}
-								placeholder="Busca y selecciona actores..."
-							/>
-						)}
-					/>
-					<button
-						type="button"
-						onClick={() => setIsActorModalOpen(true)}
-						className="create-actor-button"
-					>
-						Crear Actor
-					</button>
-				</div>
-				<div className="form-group">
-				  <label>Sinopsis:</label>
-				  <textarea
-				    {...register("sinopsis", {
-				      required: "La sinopsis es obligatoria",
-				    })}
-				    placeholder="Ingrese la sinopsis de la película..."
-				  ></textarea>
-				  {errors.sinopsis && (
-				    <span className="error">{errors.sinopsis.message}</span>
-				  )}
-				</div>
-				
-				<div className="checkbox-wrapper">
-				  <label htmlFor="enCartelera">En cartelera</label>
-				  <input type="checkbox" id="enCartelera" {...register("enCartelera")} />
-				</div>
-				<div className="checkbox-wrapper">
-				  <label htmlFor="proximamente">Próximamente</label>
-				  <input type="checkbox" id="proximamente" {...register("proximamente")} />
-				</div>
-
-				<div className="form-group">
-					<label>Poster:</label>
-					<input
-						type="file"
-						accept="image/*"
-						{...register("poster")}
-					/>
-				</div>
-				<div className="form-group buttons-group">
-					<button type="submit" className="submit-button">
-						{pelicula ? "Guardar Cambios" : "Crear Película"}
-					</button>
-					<button
-						type="button"
-						onClick={onClose}
-						className="cancel-button"
-					>
-						Cancelar
-					</button>
-				</div>
-			</form>
-
-			{isActorModalOpen && (
-				<ActorForm
-					onClose={() => setIsActorModalOpen(false)}
-					onActorCreated={handleActorCreated}
-				/>
-			)}
-		</div>
-	);
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <form 
+        onSubmit={handleSubmit(onSubmit)} 
+        className="bg-white p-6 rounded-lg max-w-[600px] w-full mx-auto shadow-md space-y-4"
+      >
+        <h3 className="text-xl font-semibold mb-4 text-center">
+          {pelicula ? "Editar Película" : "Crear Nueva Película"}
+        </h3>
+        <div className="mb-4">
+          <label className="block mb-1 font-bold">Nombre:</label>
+          <input
+            {...register("nombre", { required: "El nombre es obligatorio" })}
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {errors.nombre && (
+            <span className="text-red-500 text-sm mt-1 block">{errors.nombre.message}</span>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1 font-bold">Género:</label>
+          <input
+            {...register("genero", { required: "El género es obligatorio" })}
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {errors.genero && (
+            <span className="text-red-500 text-sm mt-1 block">{errors.genero.message}</span>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1 font-bold">Duración (minutos):</label>
+          <input
+            type="number"
+            {...register("duracion", { 
+              required: "La duración es obligatoria",
+              valueAsNumber: true 
+            })}
+            className="w-full px-3 py-2 border border-gray-300 rounded bg-[#333] text-white"
+          />
+          {errors.duracion && (
+            <span className="text-red-500 text-sm mt-1 block">{errors.duracion.message}</span>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1 font-bold">Director:</label>
+          <input
+            {...register("director", { required: "El director es obligatorio" })}
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {errors.director && (
+            <span className="text-red-500 text-sm mt-1 block">{errors.director.message}</span>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1 font-bold">Calificación:</label>
+          <select
+            {...register("calificacion", { required: "La calificación es obligatoria" })}
+            className="w-full px-3 py-2 border border-gray-300 rounded bg-[#333] text-white"
+          >
+            <option value="ATP">ATP</option>
+            <option value="+13">+13</option>
+            <option value="+16">+16</option>
+            <option value="+18">+18</option>
+          </select>
+          {errors.calificacion && (
+            <span className="text-red-500 text-sm mt-1 block">{errors.calificacion.message}</span>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1 font-bold">Actores:</label>
+          <Controller
+            control={control}
+            name="actors"
+            render={({ field: { onChange, value } }) => (
+              <AsyncSelect<Option, true>
+                cacheOptions
+                defaultOptions
+                isMulti
+                loadOptions={loadActorOptions}
+                className="w-full rounded"
+                styles={{
+                  control: (base) => ({
+                    ...base,
+                    borderColor: "#ddd",
+                    minHeight: "40px",
+                    boxShadow: "none",
+                  }),
+                  menu: (base) => ({ ...base, zIndex: 9999 }),
+                }}
+                onChange={(selected) => onChange(
+                  selected.map(opt => ({ id: opt.value, nombre: opt.label }))
+                )}
+                value={value?.map(actor => ({ value: actor.id, label: actor.nombre }))}
+                placeholder="Busca y selecciona actores..."
+              />
+            )}
+          />
+          <button
+            type="button"
+            onClick={() => setIsActorModalOpen(true)}
+            className="mt-2 px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-700 transition-colors"
+          >
+            Crear Actor
+          </button>
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1 font-bold">Sinopsis:</label>
+          <textarea
+            {...register("sinopsis", { required: "La sinopsis es obligatoria" })}
+            className="w-full px-3 py-2 border border-gray-300 rounded resize-y min-h-[120px] bg-[#333] text-white"
+            placeholder="Ingrese la sinopsis de la película..."
+          />
+          {errors.sinopsis && (
+            <span className="text-red-500 text-sm mt-1 block">{errors.sinopsis.message}</span>
+          )}
+        </div>
+        <div className="flex gap-4 mb-4">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="enCartelera"
+              {...register("enCartelera")}
+              className="rounded"
+            />
+            <label htmlFor="enCartelera" className="font-bold">En cartelera</label>
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="proximamente"
+              {...register("proximamente")}
+              className="rounded"
+            />
+            <label htmlFor="proximamente" className="font-bold">Próximamente</label>
+          </div>
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1 font-bold">Poster:</label>
+          <input
+            type="file"
+            accept="image/*"
+            {...register("poster")}
+            className="w-full px-3 py-2 border border-gray-300 rounded"
+          />
+        </div>
+        <div className="flex justify-end gap-2 mt-4">
+          <button
+            type="submit"
+            className="px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-700 transition-colors"
+          >
+            {pelicula ? "Guardar Cambios" : "Crear Película"}
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition-colors"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+      {isActorModalOpen && (
+        <ActorForm
+          onClose={() => setIsActorModalOpen(false)}
+          onActorCreated={(newActor) => {
+            const currentActors = getValues("actors") || [];
+            setValue("actors", [...currentActors, newActor]);
+          }}
+        />
+      )}
+    </div>
+  );
 };
 
 export default PeliculaForm;

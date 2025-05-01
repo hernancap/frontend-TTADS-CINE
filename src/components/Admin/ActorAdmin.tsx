@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Actor } from '../../types';
 import { getActors, deleteActor } from '../../api/actor';
 import ActorForm from './ActorForm';
-import './ActorAdmin.css';
 
 const ActorAdmin = () => {
   const [actors, setActors] = useState<Actor[]>([]);
@@ -62,40 +61,51 @@ const ActorAdmin = () => {
   };
 
   return (
-    <div className="actor-admin">
-      <h2>Administrar Actores</h2>
-      {error && <p className="error">{error}</p>}
-      <button onClick={handleCreate} className="create-button">
+    <div className="p-4 bg-white text-black rounded-lg max-w-6xl mx-auto my-4">
+      <h2 className="text-2xl mb-4">Administrar Actores</h2>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      <button 
+        onClick={handleCreate} 
+        className="mb-4 px-4 py-2 bg-gray-900 text-white rounded cursor-pointer hover:bg-gray-700 transition-colors"
+      >
         Crear Nuevo Actor
       </button>
-      <table className="actor-admin-table">
+      <table className="w-full border-collapse">
         <thead>
           <tr>
-            <th>Nombre</th>
-            <th className="actions-header">Acciones</th>
+            <th className="border border-gray-300 px-4 py-3">Nombre</th>
+            <th className="border border-gray-300 px-4 py-3 text-right">Acciones</th>
           </tr>
         </thead>
         <tbody>
           {currentItems.length === 0 ? (
             <tr>
-              <td colSpan={2}>No hay actores</td>
+              <td colSpan={2} className="border border-gray-300 px-4 py-3 text-center">
+                No hay actores
+              </td>
             </tr>
           ) : (
             currentItems.map((actor) => (
               <tr key={actor.id}>
-                <td>{actor.nombre}</td>
-                <td className="actions-cell">
-                  <button onClick={() => handleDelete(actor.id)}>Eliminar</button>
+                <td className="border border-gray-300 px-4 py-3">{actor.nombre}</td>
+                <td className="border border-gray-300 px-4 py-3 text-right">
+                  <button 
+                    onClick={() => handleDelete(actor.id)}
+                    className="ml-2 px-3 py-1 bg-gray-900 text-white rounded cursor-pointer hover:bg-gray-700 transition-colors"
+                  >
+                    Eliminar
+                  </button>
                 </td>
               </tr>
             ))
           )}
         </tbody>
       </table>
-      <div className="pagination">
+      <div className="flex gap-4 mt-4 justify-center">
         <button 
           onClick={() => setCurrentPage(prev => prev - 1)} 
           disabled={currentPage === 1}
+          className="px-4 py-2 bg-gray-900 text-white rounded cursor-pointer hover:bg-gray-700 transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed"
         >
           Anterior
         </button>
@@ -103,13 +113,14 @@ const ActorAdmin = () => {
         <button 
           onClick={() => setCurrentPage(prev => prev + 1)}
           disabled={currentPage >= Math.ceil(actors.length / itemsPerPage)}
+          className="px-4 py-2 bg-gray-900 text-white rounded cursor-pointer hover:bg-gray-700 transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed"
         >
           Siguiente
         </button>
       </div>
       {showForm && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg">
             <ActorForm onClose={handleFormClose} onActorCreated={handleFormClose} />
           </div>
         </div>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import './SalaAsientosAdmin.css';
 
 interface Asiento {
   fila: string;
@@ -55,29 +54,33 @@ const SalaAsientosAdmin: React.FC<SalaAsientosAdminProps> = ({ numFilas, asiento
   }
 
   return (
-    <div className="admin-seat-grid-wrapper">
-    <div className="admin-seat-grid">
-      {grid.map(rowObj => (
-        <div key={rowObj.row} className="seat-row">
-          <span className="row-label">{rowObj.row}</span>
-          <div className="seat-row-buttons">
-            {rowObj.seats.map(seat => {
-              const isSelected = selected.some(s => s.fila === seat.fila && s.numero === seat.numero);
-              return (
-                <button
-                  type="button"
-                  key={`${seat.fila}${seat.numero}`}
-                  className={`seat-button ${isSelected ? 'selected' : ''}`}
-                  onClick={() => toggleSeat(seat)}
-                >
-                  {seat.fila}{seat.numero}
-                </button>
-              );
-            })}
+    <div className="overflow-x-auto max-w-full">
+      <div className="flex flex-col gap-4 mt-4 min-w-max">
+        {grid.map(rowObj => (
+          <div key={rowObj.row} className="flex items-center gap-2">
+            <span className="font-bold min-w-[1.5rem] text-center">{rowObj.row}</span>
+            <div className="flex gap-[0.3rem] flex-wrap">
+              {rowObj.seats.map(seat => {
+                const isSelected = selected.some(s => s.fila === seat.fila && s.numero === seat.numero);
+                return (
+                  <button
+                    type="button"
+                    key={`${seat.fila}${seat.numero}`}
+                    className={`w-[50px] h-[50px] border border-gray-600 rounded-md cursor-pointer transition-colors duration-200 ${
+                      isSelected 
+                        ? 'bg-green-600 text-white hover:bg-gray-700' 
+                        : 'bg-gray-800 text-gray-200 hover:bg-gray-100'
+                    }`}
+                    onClick={() => toggleSeat(seat)}
+                  >
+                    {seat.fila}{seat.numero}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
     </div>
   );
 };

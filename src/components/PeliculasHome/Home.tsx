@@ -29,7 +29,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="container">
-      <h1>Cartelera</h1>
+      <h1 className="text-2xl text-white mb-4">Cartelera</h1>
       <MovieGrid peliculas={peliculas} />
       <Proximamente />
     </div>

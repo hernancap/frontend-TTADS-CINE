@@ -1,6 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import './Menu.css';
 
 const Menu = () => {
   const { user, logout } = useAuth();
@@ -12,54 +11,54 @@ const Menu = () => {
   };
 
   return (
-    <nav className="navbar">
-      <div className="navbar-left">
-        <Link to="/" className="nav-button">Home</Link>
+    <nav className="flex justify-between items-center p-4 bg-[#333] text-white">
+      <div className="flex justify-between items-center p-4 bg-[#333] text-white">
+        <Link to="/" className="px-4 py-2 rounded hover:bg-white/10 transition-colors">Home</Link>
         {user && (
-          <div className="dropdown">
-            <span className="nav-button dropdown-title">Mi Perfil</span>
-            <div className="dropdown-content">
-              <Link to="/perfil/entradas" className="nav-button">Entradas</Link>
-              <Link to="/perfil/cupones" className="nav-button">Mis Cupones</Link>
-              <Link to="/perfil/favoritos" className="nav-button">Favoritos</Link>
+          <div className="relative group">
+            <span className="px-4 py-2 rounded hover:bg-white/10 cursor-pointer">Mi Perfil</span>
+            <div className="absolute hidden group-hover:block mt-2 w-48 bg-[#444] shadow-md rounded">
+              <Link to="/perfil/entradas" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Entradas</Link>
+              <Link to="/perfil/cupones" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Mis Cupones</Link>
+              <Link to="/perfil/favoritos" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Favoritos</Link>
             </div>
           </div>
         )}
         {user && user.tipo === 'admin' && (
-        <div className="admin-dropdowns">
-          <div className="dropdown">
-            <span className="nav-button dropdown-title">Admin</span>
-            <div className="dropdown-content">
-              <Link to="/admin/peliculas" className="nav-button">Administrar Películas</Link>
-              <Link to="/admin/actors" className="nav-button">Administrar Actores</Link>
-              <Link to="/admin/salas" className="nav-button">Administrar Salas</Link>
-              <Link to="/admin/funciones" className="nav-button">Administrar Funciones</Link>
-              <Link to="/admin/usuarios" className="nav-button">Administrar Usuarios</Link>              
+        <div className="flex gap-4">
+          <div className="relative group">
+            <span className="px-4 py-2 rounded hover:bg-white/10 cursor-pointer">Admin</span>
+            <div className="absolute hidden group-hover:block mt-2 w-56 bg-[#444] shadow-md rounded">
+              <Link to="/admin/peliculas" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Administrar Películas</Link>
+              <Link to="/admin/actors" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Administrar Actores</Link>
+              <Link to="/admin/salas" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Administrar Salas</Link>
+              <Link to="/admin/funciones" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Administrar Funciones</Link>
+              <Link to="/admin/usuarios" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Administrar Usuarios</Link>              
             </div>
           </div>
-          <div className="dropdown">
-            <span className="nav-button dropdown-title">Reportes</span>
-            <div className="dropdown-content">
-              <Link to="/reportes/entradas" className="nav-button">Reporte de Entradas</Link>
-              <Link to="/reportes/favoritos" className="nav-button">Reporte de Favoritos</Link>
+          <div className="relative group">
+            <span className="px-4 py-2 rounded hover:bg-white/10 cursor-pointer">Reportes</span>
+            <div className="absolute hidden group-hover:block mt-2 w-56 bg-[#444] shadow-md rounded">
+              <Link to="/reportes/entradas" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Reporte de Entradas</Link>
+              <Link to="/reportes/favoritos" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Reporte de Favoritos</Link>
             </div>
           </div>
         </div>
       )}
       </div>
-      <div className="navbar-right">
+      <div className="flex items-center gap-4">
         {user ? (
-          <div className="user-menu">
-            <span className="welcome-message">Bienvenido, {user.nombre}</span>
+          <div className="flex items-center gap-4">
+            <span className="text-gray-300 text-sm">Bienvenido, {user.nombre}</span>
             <button 
               onClick={handleLogout} 
-              className="nav-button logout-button"
+              className="px-4 py-2 bg-white rounded hover:bg-black transition-colors"
             >
               Cerrar sesión
             </button>
           </div>
         ) : (
-          <Link to="/login" className="nav-button">Login</Link>
+          <Link to="/login" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Login</Link>
         )}
       </div>
     </nav>

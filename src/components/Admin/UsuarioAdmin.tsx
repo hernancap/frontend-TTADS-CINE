@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Usuario } from "../../types";
 import { getUsuarios, deleteUsuario } from "../../api/usuario";
 import UsuarioForm from "./UsuarioForm";
-import "./UsuarioAdmin.css";
 
 const UsuarioAdmin = () => {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
@@ -69,63 +68,80 @@ const UsuarioAdmin = () => {
   };
 
   return (
-    <div className="usuario-admin">
-      <h2>Administrar Usuarios</h2>
-      {error && <p className="error">{error}</p>}
-      <button onClick={handleCreate} className="create-button">
+    <div className="p-4 bg-white rounded-lg max-w-[1200px] mx-auto my-4 text-black">
+      <h2 className="text-2xl font-semibold mb-4">Administrar Usuarios</h2>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      <button
+        onClick={handleCreate}
+        className="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 mb-4"
+      >
         Crear Nuevo Usuario
       </button>
-      <table className="usuario-admin-table">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Tipo</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentItems.length === 0 ? (
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse">
+          <thead>
             <tr>
-              <td colSpan={4}>No hay usuarios</td>
+              <th className="border border-gray-300 p-3 text-left bg-gray-100">Nombre</th>
+              <th className="border border-gray-300 p-3 text-left bg-gray-100">Email</th>
+              <th className="border border-gray-300 p-3 text-left bg-gray-100">Tipo</th>
+              <th className="border border-gray-300 p-3 text-left bg-gray-100">Acciones</th>
             </tr>
-          ) : (
-            currentItems.map((usuario) => (
-              <tr key={usuario.id}>
-                <td>{usuario.nombre}</td>
-                <td>{usuario.email}</td>
-                <td>{usuario.tipo}</td>
-                <td className="actions-cell">
-                  <button onClick={() => handleEdit(usuario)}>Editar</button>
-                  <button onClick={() => handleDelete(usuario.id)}>
-                    Eliminar
-                  </button>
+          </thead>
+          <tbody>
+            {currentItems.length === 0 ? (
+              <tr>
+                <td className="border border-gray-300 p-3 text-center" colSpan={4}>
+                  No hay usuarios
                 </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-      <div className="pagination">
-        <button 
-          onClick={() => setCurrentPage(prev => prev - 1)} 
+            ) : (
+              currentItems.map((usuario) => (
+                <tr key={usuario.id}>
+                  <td className="border border-gray-300 p-3">{usuario.nombre}</td>
+                  <td className="border border-gray-300 p-3">{usuario.email}</td>
+                  <td className="border border-gray-300 p-3">{usuario.tipo}</td>
+                  <td className="border border-gray-300 p-3 text-right">
+                    <button
+                      onClick={() => handleEdit(usuario)}
+                      className="ml-2 px-2.5 py-1.5 bg-gray-900 text-white rounded-md hover:bg-gray-800"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => handleDelete(usuario.id)}
+                      className="ml-2 px-2.5 py-1.5 bg-gray-900 text-white rounded-md hover:bg-gray-800"
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+      <div className="mt-4 flex gap-4 items-center justify-center">
+        <button
+          onClick={() => setCurrentPage(prev => prev - 1)}
           disabled={currentPage === 1}
+          className="px-4 py-2 bg-gray-900 text-white rounded-md disabled:bg-gray-600 disabled:cursor-not-allowed"
         >
           Anterior
         </button>
         <span>
           Página {currentPage} de {Math.ceil(usuarios.length / itemsPerPage) || 1}
         </span>
-        <button 
+        <button
           onClick={() => setCurrentPage(prev => prev + 1)}
           disabled={currentPage >= Math.ceil(usuarios.length / itemsPerPage)}
+          className="px-4 py-2 bg-gray-900 text-white rounded-md disabled:bg-gray-600 disabled:cursor-not-allowed"
         >
           Siguiente
         </button>
       </div>
       {showForm && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-8">
+          <div className="bg-white p-8 rounded-lg shadow-xl max-w-[600px] w-full max-h-[90vh] overflow-y-auto">
             <UsuarioForm usuario={selectedUsuario} onClose={handleFormClose} />
           </div>
         </div>
