@@ -33,16 +33,16 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/pelicula/:id" element={<MovieDetail />} />
-          <Route path="/comprar/:id" element={<PurchaseForm />} />
-          <Route path="/register" element={<Register />} />   
-          <Route path="/pago" element={<Pago />} />
-          <Route path="/pago-exitoso" element={<PagoExitoso />} />
-          <Route path="/pago-fallido" element={<PagoFallido />} />
+          <Route path="/register" element={<Register />} />       
           <Route element={<ProtectedRoute />}>
             <Route path="/perfil/entradas" element={<MyProfile />} />
             <Route path="/perfil/cupones" element={<MisCupones />} />
             <Route path="/perfil/favoritos" element={<Favoritos />} />
             <Route path="/perfil/entrada/:entradaId" element={<EntradaQR />} />
+            <Route path="/pago" element={<Pago />} />
+            <Route path="/pago-exitoso" element={<PagoExitoso />} />
+            <Route path="/pago-fallido" element={<PagoFallido />} />
+            <Route path="/comprar/:id" element={<PurchaseForm />} />
             <Route element={<AdminRoute />}>
               <Route path="/admin/peliculas" element={<PeliculaAdmin />} />
               <Route path="/admin/actors" element={<ActorAdmin />} />
