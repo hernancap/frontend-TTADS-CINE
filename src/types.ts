@@ -95,4 +95,5 @@ export interface Entrada {
   usuario: Usuario;
   funcion: Funcion;
   asientoFuncion: AsientoFuncion;
+  usada: boolean;
 }

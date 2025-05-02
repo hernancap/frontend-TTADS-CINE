@@ -17,7 +17,7 @@ const Menu = () => {
         {user && (
           <div className="relative group">
             <span className="px-4 py-2 rounded hover:bg-white/10 cursor-pointer">Mi Perfil</span>
-            <div className="absolute hidden group-hover:block mt-2 w-48 bg-[#444] shadow-md rounded">
+            <div className="absolute top-full left-0 hidden group-hover:block mt-1 w-48 bg-[#444] shadow-md rounded">
               <Link to="/perfil/entradas" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Entradas</Link>
               <Link to="/perfil/cupones" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Mis Cupones</Link>
               <Link to="/perfil/favoritos" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Favoritos</Link>
@@ -28,7 +28,7 @@ const Menu = () => {
         <div className="flex gap-4">
           <div className="relative group">
             <span className="px-4 py-2 rounded hover:bg-white/10 cursor-pointer">Admin</span>
-            <div className="absolute hidden group-hover:block mt-2 w-56 bg-[#444] shadow-md rounded">
+            <div className="absolute top-full left-0 hidden group-hover:block mt-1 w-48 bg-[#444] shadow-md rounded">
               <Link to="/admin/peliculas" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Administrar Películas</Link>
               <Link to="/admin/actors" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Administrar Actores</Link>
               <Link to="/admin/salas" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Administrar Salas</Link>
@@ -38,7 +38,7 @@ const Menu = () => {
           </div>
           <div className="relative group">
             <span className="px-4 py-2 rounded hover:bg-white/10 cursor-pointer">Reportes</span>
-            <div className="absolute hidden group-hover:block mt-2 w-56 bg-[#444] shadow-md rounded">
+            <div className="absolute top-full left-0 hidden group-hover:block mt-1 w-48 bg-[#444] shadow-md rounded">
               <Link to="/reportes/entradas" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Reporte de Entradas</Link>
               <Link to="/reportes/favoritos" className="block px-4 py-3 text-white hover:bg-[#555] transition-colors">Reporte de Favoritos</Link>
             </div>
