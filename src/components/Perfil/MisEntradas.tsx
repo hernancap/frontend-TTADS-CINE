@@ -94,7 +94,7 @@ const MyProfile = () => {
                 <div className="mt-3 text-right">
                   {!entrada.usada && new Date(entrada.funcion.fechaHora) > new Date() ? (
                     <button
-                      onClick={() => navigate(`/entrada/${entrada.id}/qr`)}
+                      onClick={() => navigate(`/perfil/entrada/${entrada.id}`)}
                       className="px-4 py-2 bg-green-600 text-white font-semibold rounded hover:bg-green-700 transition"
                     >
                       Mostrar QR

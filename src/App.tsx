@@ -9,6 +9,7 @@ import UsuarioAdmin from './components/Admin/UsuarioAdmin';
 import MyProfile from './components/Perfil/MisEntradas'; 
 import MisCupones from './components/Perfil/MisCupones';
 import Favoritos from './components/Perfil/Favoritos';
+import EntradaQR from './components/Perfil/EntradaQR.tsx';
 import { AuthProvider } from './context/authProvider';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
@@ -41,6 +42,7 @@ function App() {
             <Route path="/perfil/entradas" element={<MyProfile />} />
             <Route path="/perfil/cupones" element={<MisCupones />} />
             <Route path="/perfil/favoritos" element={<Favoritos />} />
+            <Route path="/perfil/entrada/:entradaId" element={<EntradaQR />} />
             <Route element={<AdminRoute />}>
               <Route path="/admin/peliculas" element={<PeliculaAdmin />} />
               <Route path="/admin/actors" element={<ActorAdmin />} />
