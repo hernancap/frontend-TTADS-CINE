@@ -10,10 +10,11 @@ export const createPreference = async (
   items: { id: string; title: string; quantity: number; unit_price: number }[],
   userId: string,
   funcionId: string,
-  asientoIds: string[]
+  asientoIds: string[],
+  cuponId?: string
 ): Promise<{ preferenceId: string }> => {
   try {
-    const response = await apiClient.post<BackendResponse<string>>("/mercadopago/create-preference", { items, userId, funcionId, asientoIds } );
+    const response = await apiClient.post<BackendResponse<string>>("/mercadopago/create-preference", { items, userId, funcionId, asientoIds, cuponId } );
     return { preferenceId: response.data.data };
   } catch (error) {
     if (axios.isAxiosError(error)) {

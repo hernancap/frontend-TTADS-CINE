@@ -109,7 +109,7 @@ const PurchaseForm = () => {
       };
 
       const selectedAsientosFuncionIds = selectedAsientosFuncion.map(asientoFuncion => asientoFuncion.id);
-      const response = await createPreference([item], user.id, funcionId, selectedAsientosFuncionIds);
+      const response = await createPreference([item], user.id, funcionId, selectedAsientosFuncionIds, selectedCuponId);
       console.log("Preference creada:", response.preferenceId);
 
       localStorage.setItem('preferenceId', response.preferenceId);
