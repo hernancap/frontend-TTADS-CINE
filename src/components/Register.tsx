@@ -11,7 +11,7 @@ const Register: React.FC = () => {
 
   return (
     <div>
-      <UsuarioForm usuario={null} onClose={handleClose} newUser={true} />
+      <UsuarioForm usuario={null} onClose={handleClose} isAdmin={false} />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './components/PeliculasHome/Home';         
 import PeliculaAdmin from './components/Admin/PeliculaAdmin'; 
 import ActorAdmin from './components/Admin/ActorAdmin'; 
@@ -23,11 +23,15 @@ import PagoExitoso from './components/CompraEntrada/PagoExitoso.tsx';
 import PagoFallido from './components/CompraEntrada/PagoFallido.tsx';
 import ReporteEntradas from './components/Reportes/ReporteEntradas.tsx';
 import ReporteFavoritos from './components/Reportes/ReporteFavoritos.tsx';
+import PeliculaForm from './components/Admin/PeliculaForm.tsx';
+import FuncionForm from './components/Admin/FuncionForm.tsx';
+import SalaForm from './components/Admin/SalaForm.tsx';
+import UsuarioForm from './components/Admin/UsuarioForm.tsx';
 
 function App() {
   return (
     <AuthProvider>
-      <Router>
+      <BrowserRouter>
         <Menu />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -51,10 +55,17 @@ function App() {
               <Route path="/admin/usuarios" element={<UsuarioAdmin />} />
               <Route path="/reportes/entradas" element={<ReporteEntradas />} />
               <Route path="/reportes/favoritos" element={<ReporteFavoritos />} />
+              <Route path="/admin/peliculas/nueva" element={<PeliculaForm />} />
+              <Route path="/admin/peliculas/:id/editar" element={<PeliculaForm />} />
+              <Route path="/admin/funciones/nueva" element={<FuncionForm />} />
+              <Route path="/admin/salas/nueva" element={<SalaForm />} />
+              <Route path="/admin/salas/:id/editar" element={<SalaForm />} />
+              <Route path="/admin/usuarios/nuevo" element={<UsuarioForm isAdmin={true} />} />
+              <Route path="/admin/usuarios/:id/editar" element={<UsuarioForm isAdmin={true} />} />
             </Route>
           </Route>
         </Routes>
-      </Router>
+      </BrowserRouter>
     </AuthProvider>
   );
 }

@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Sala } from '../../types';
 import { getSalas, deleteSala } from '../../api/sala';
-import SalaForm from './SalaForm';
+import { useNavigate } from 'react-router-dom';
 
 const SalaAdmin = () => {
+  const navigate = useNavigate(); 
   const [salas, setSalas] = useState<Sala[]>([]);
-  const [selectedSala, setSelectedSala] = useState<Sala | null>(null);
-  const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -53,18 +52,11 @@ const SalaAdmin = () => {
   };
 
   const handleEdit = (sala: Sala) => {
-    setSelectedSala(sala);
-    setShowForm(true);
+    navigate(`/admin/salas/${sala.id}/editar`);
   };
 
   const handleCreate = () => {
-    setSelectedSala(null);
-    setShowForm(true);
-  };
-
-  const handleFormClose = () => {
-    setShowForm(false);
-    loadSalas();
+    navigate("/admin/salas/nueva");
   };
 
   return (
@@ -80,22 +72,22 @@ const SalaAdmin = () => {
       <table className="w-full border-collapse">
         <thead>
           <tr>
-            <th className="border border-gray-300 p-3 text-left bg-gray-100">Nombre</th>
-            <th className="border border-gray-300 p-3 text-right bg-gray-100">Acciones</th>
+            <th className="border p-3 bg-gray-100">Nombre</th>
+            <th className="border p-3 text-right bg-gray-100">Acciones</th>
           </tr>
         </thead>
         <tbody>
           {currentItems.length === 0 ? (
             <tr>
-              <td className="border border-gray-300 p-3 text-center" colSpan={2}>
+              <td className="border p-3 text-center" colSpan={2}>
                 No hay salas
               </td>
             </tr>
           ) : (
             currentItems.map((sala) => (
               <tr key={sala.id}>
-                <td className="border border-gray-300 p-3">{sala.nombre}</td>
-                <td className="border border-gray-300 p-3 text-right">
+                <td className="border p-3">{sala.nombre}</td>
+                <td className="border p-3 text-right">
                   <button
                     onClick={() => handleEdit(sala)}
                     className="ml-2 px-2.5 py-1.5 bg-gray-900 text-white rounded-md hover:bg-gray-800"
@@ -133,13 +125,6 @@ const SalaAdmin = () => {
           Siguiente
         </button>
       </div>
-      {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-8">
-          <div className="bg-white p-8 rounded-lg shadow-xl max-w-[600px] w-full max-h-[90vh] overflow-y-auto">
-            <SalaForm sala={selectedSala} onClose={handleFormClose} />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

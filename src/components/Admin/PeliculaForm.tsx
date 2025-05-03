@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import AsyncSelect from "react-select/async";
 import ActorForm from "./ActorForm";
-import { Pelicula, Actor } from "../../types";
-import { createPelicula, updatePelicula } from "../../api/pelicula";
+import { Actor } from "../../types";
+import { createPelicula, getPelicula, updatePelicula } from "../../api/pelicula";
 import { getActors } from "../../api/actor";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface Option {
   value: string;
@@ -24,22 +25,14 @@ interface PeliculaFormInputs {
   sinopsis: string;
 }
 
-interface PeliculaFormProps {
-  pelicula: Pelicula | null;
-  onClose: () => void;
-}
-
-const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
-  const {
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    getValues,
-    formState: { errors },
-  } = useForm<PeliculaFormInputs>({
-    defaultValues: pelicula
-      ? {
+const PeliculaForm: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const { register, handleSubmit, control, setValue, getValues, formState: { errors } } = useForm<PeliculaFormInputs>({
+    defaultValues: async () => {
+      if (id) {
+        const peliculaResponse = await getPelicula(id);
+        const pelicula = peliculaResponse.data;
+        return {
           nombre: pelicula.nombre,
           genero: pelicula.genero,
           duracion: Number(pelicula.duracion),
@@ -49,8 +42,9 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
           proximamente: pelicula.proximamente,
           calificacion: pelicula.calificacion,
           sinopsis: pelicula.sinopsis,
-        }
-      : {
+        };
+      }
+      return {
           nombre: "",
           genero: "",
           duracion: 0,
@@ -60,9 +54,11 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
           proximamente: true,
           calificacion: "ATP",
           sinopsis: "",
-        },
-  });
+        };
+      },
+    });
 
+  const navigate = useNavigate();
   const [isActorModalOpen, setIsActorModalOpen] = useState(false);
 
   const loadActorOptions = async (inputValue: string): Promise<Option[]> => {
@@ -97,48 +93,48 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
       if (data.poster && data.poster.length > 0) {
         formData.append("poster", data.poster[0]);
       }
-      if (pelicula) {
-		await updatePelicula(pelicula.id, formData);
-	  } else {
-		await createPelicula(formData);
-	  }
-      onClose();
+      if (id) {
+        await updatePelicula(id, formData);
+      } else {
+        await createPelicula(formData);
+      }
+      navigate("/admin/peliculas");
     } catch (error) {
       console.error("Error al guardar:", error);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div className="p-4">
       <form 
         onSubmit={handleSubmit(onSubmit)} 
         className="bg-white p-6 rounded-lg max-w-[600px] w-full mx-auto shadow-md space-y-4"
-      >
-        <h3 className="text-xl font-semibold mb-4 text-center">
-          {pelicula ? "Editar Película" : "Crear Nueva Película"}
+      > 
+        <h3 className="text-xl font-semibold mb-4 text-center text-black">
+          {id ? "Editar Película" : "Crear Nueva Película"}
         </h3>
         <div className="mb-4">
-          <label className="block mb-1 font-bold">Nombre:</label>
+          <label className="block mb-1 font-bold text-black">Nombre:</label>
           <input
             {...register("nombre", { required: "El nombre es obligatorio" })}
-            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#333] text-white"
           />
           {errors.nombre && (
             <span className="text-red-500 text-sm mt-1 block">{errors.nombre.message}</span>
           )}
         </div>
         <div className="mb-4">
-          <label className="block mb-1 font-bold">Género:</label>
+          <label className="block mb-1 font-bold text-black">Género:</label>
           <input
             {...register("genero", { required: "El género es obligatorio" })}
-            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#333] text-white"
           />
           {errors.genero && (
             <span className="text-red-500 text-sm mt-1 block">{errors.genero.message}</span>
           )}
         </div>
         <div className="mb-4">
-          <label className="block mb-1 font-bold">Duración (minutos):</label>
+          <label className="block mb-1 font-bold text-black">Duración (minutos):</label>
           <input
             type="number"
             {...register("duracion", { 
@@ -152,17 +148,17 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
           )}
         </div>
         <div className="mb-4">
-          <label className="block mb-1 font-bold">Director:</label>
+          <label className="block mb-1 font-bold text-black">Director:</label>
           <input
             {...register("director", { required: "El director es obligatorio" })}
-            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#333] text-white"
           />
           {errors.director && (
             <span className="text-red-500 text-sm mt-1 block">{errors.director.message}</span>
           )}
         </div>
         <div className="mb-4">
-          <label className="block mb-1 font-bold">Calificación:</label>
+          <label className="block mb-1 font-bold text-black">Calificación:</label>
           <select
             {...register("calificacion", { required: "La calificación es obligatoria" })}
             className="w-full px-3 py-2 border border-gray-300 rounded bg-[#333] text-white"
@@ -177,7 +173,7 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
           )}
         </div>
         <div className="mb-4">
-          <label className="block mb-1 font-bold">Actores:</label>
+          <label className="block mb-1 font-bold text-black">Actores:</label>
           <Controller
             control={control}
             name="actors"
@@ -194,8 +190,18 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
                     borderColor: "#ddd",
                     minHeight: "40px",
                     boxShadow: "none",
+                    backgroundColor: "#333",
                   }),
                   menu: (base) => ({ ...base, zIndex: 9999 }),
+                  option: (base) => ({
+                    ...base,
+                    color: "black",
+                    cursor: "pointer",
+                  }),
+                  multiValueRemove: (base) => ({
+                    ...base,
+                    color: "black",
+                  }),
                 }}
                 onChange={(selected) => onChange(
                   selected.map(opt => ({ id: opt.value, nombre: opt.label }))
@@ -214,7 +220,7 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
           </button>
         </div>
         <div className="mb-4">
-          <label className="block mb-1 font-bold">Sinopsis:</label>
+          <label className="block mb-1 font-bold text-black">Sinopsis:</label>
           <textarea
             {...register("sinopsis", { required: "La sinopsis es obligatoria" })}
             className="w-full px-3 py-2 border border-gray-300 rounded resize-y min-h-[120px] bg-[#333] text-white"
@@ -232,7 +238,7 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
               {...register("enCartelera")}
               className="rounded"
             />
-            <label htmlFor="enCartelera" className="font-bold">En cartelera</label>
+            <label htmlFor="enCartelera" className="font-bold text-black">En cartelera</label>
           </div>
           <div className="flex items-center gap-2">
             <input
@@ -241,16 +247,16 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
               {...register("proximamente")}
               className="rounded"
             />
-            <label htmlFor="proximamente" className="font-bold">Próximamente</label>
+            <label htmlFor="proximamente" className="font-bold text-black">Próximamente</label>
           </div>
         </div>
         <div className="mb-4">
-          <label className="block mb-1 font-bold">Poster:</label>
+          <label className="block mb-1 font-bold text-black">Poster:</label>
           <input
             type="file"
             accept="image/*"
             {...register("poster")}
-            className="w-full px-3 py-2 border border-gray-300 rounded"
+            className="w-full px-3 py-2 border border-gray-300 rounded text-black"
           />
         </div>
         <div className="flex justify-end gap-2 mt-4">
@@ -258,11 +264,11 @@ const PeliculaForm: React.FC<PeliculaFormProps> = ({ pelicula, onClose }) => {
             type="submit"
             className="px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-700 transition-colors"
           >
-            {pelicula ? "Guardar Cambios" : "Crear Película"}
+            {id ? "Guardar Cambios" : "Crear Película"}
           </button>
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => navigate("/admin/peliculas")} 
             className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition-colors"
           >
             Cancelar

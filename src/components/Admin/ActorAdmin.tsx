@@ -73,22 +73,22 @@ const ActorAdmin = () => {
       <table className="w-full border-collapse">
         <thead>
           <tr>
-            <th className="border border-gray-300 px-4 py-3">Nombre</th>
-            <th className="border border-gray-300 px-4 py-3 text-right">Acciones</th>
+            <th className="border bg-gray-100 px-4 py-3">Nombre</th>
+            <th className="border bg-gray-100 px-4 py-3 text-right">Acciones</th>
           </tr>
         </thead>
         <tbody>
           {currentItems.length === 0 ? (
             <tr>
-              <td colSpan={2} className="border border-gray-300 px-4 py-3 text-center">
+              <td colSpan={2} className="border px-4 py-3 text-center">
                 No hay actores
               </td>
             </tr>
           ) : (
             currentItems.map((actor) => (
               <tr key={actor.id}>
-                <td className="border border-gray-300 px-4 py-3">{actor.nombre}</td>
-                <td className="border border-gray-300 px-4 py-3 text-right">
+                <td className="border px-4 py-3">{actor.nombre}</td>
+                <td className="border px-4 py-3 text-right">
                   <button 
                     onClick={() => handleDelete(actor.id)}
                     className="ml-2 px-3 py-1 bg-gray-900 text-white rounded cursor-pointer hover:bg-gray-700 transition-colors"

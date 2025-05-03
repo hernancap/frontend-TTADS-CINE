@@ -119,7 +119,7 @@ const MovieDetail = () => {
             {next7Days.map((day) => (
               <button
                 key={day.toISOString()}
-                className={`flex-1 p-2 border rounded transition-all ${
+                className={`flex-1 p-2 border rounded transition-all text-black ${
                   isSameDay(day, selectedDate) 
                     ? 'bg-orange-200 border-orange-400' 
                     : 'bg-gray-100 border-gray-300 hover:bg-gray-200'
@@ -145,7 +145,7 @@ const MovieDetail = () => {
                           <Link 
                             key={funcion.id} 
                             to={`/comprar/${funcion.id}`}
-                            className="px-4 py-3 bg-gray-100 border border-gray-300 rounded transition-all hover:bg-gray-200 hover:scale-105"
+                            className="px-4 py-3 bg-gray-100 border border-gray-300 rounded transition-all hover:bg-gray-200 hover:scale-105 text-black"
                           >
                             {formatDateFromUTC(funcion.fechaHora)}
                           </Link>

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Funcion } from "../../types";
 import { getFunciones, deleteFuncion } from "../../api/funcion";
-import FuncionForm from "./FuncionForm";
 import { format } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
+import { useNavigate } from "react-router-dom"; 
 
 const FuncionAdmin = () => {
+  const navigate = useNavigate();
   const [funciones, setFunciones] = useState<Funcion[]>([]);
-  const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -58,21 +58,12 @@ const FuncionAdmin = () => {
     }
   };
 
-  const handleCreate = () => {
-    setShowForm(true);
-  };
-
-  const handleFormClose = () => {
-    setShowForm(false);
-    loadFunciones();
-  };
-
   return (
     <div className="p-4 bg-white text-black rounded-lg max-w-[1200px] mx-auto my-4">
       <h2 className="text-2xl mb-4">Administrar Funciones</h2>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <button 
-        onClick={handleCreate} 
+        onClick={() => navigate("/admin/funciones/nueva")}
         className="px-4 py-2 mb-4 bg-gray-900 text-white rounded hover:bg-gray-700 transition-colors"
       >
         Crear Nueva Función
@@ -129,13 +120,6 @@ const FuncionAdmin = () => {
           Siguiente
         </button>
       </div>
-      {showForm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-xl shadow-xl max-w-[600px] w-full">
-            <FuncionForm onClose={handleFormClose} />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

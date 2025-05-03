@@ -12,6 +12,12 @@ interface ApiResponse<T> {
   status: number;
 }
 
+export interface ReporteFavorito {
+  id: string;
+  nombre: string;
+  cantidadFavoritos: number;
+}
+
 export const getPeliculas = async (params?: Record<string, string | number | boolean>): Promise<ApiResponse<Pelicula[]>> => {
   try {
     const response = await apiClient.get<BackendResponse<Pelicula[]>>('/peliculas', { params });

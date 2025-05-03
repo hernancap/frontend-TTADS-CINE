@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { Pelicula, Sala, TipoFuncion } from "../../types";
 import { createFuncion } from "../../api/funcion";
 import { getPeliculas } from "../../api/pelicula";
 import { getSalas } from "../../api/sala";
 import AsyncSelect from "react-select/async";
 import { format, addDays } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 interface Option {
   value: string;
@@ -18,10 +19,6 @@ interface FuncionFormInputs {
   pelicula: Option | null;
   precio: number;
   tipo: TipoFuncion; 
-}
-
-interface FuncionFormProps {
-  onClose: () => void;
 }
 
 const generateTimesArray = (): string[] => {
@@ -40,7 +37,8 @@ const generateTimesArray = (): string[] => {
   return times;
 };
 
-const FuncionForm: React.FC<FuncionFormProps> = ({ onClose }) => {
+const FuncionForm: React.FC = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -154,7 +152,7 @@ const FuncionForm: React.FC<FuncionFormProps> = ({ onClose }) => {
     }
   };
 
-  const onSubmit: SubmitHandler<FuncionFormInputs> = async (data) => {
+  const onSubmit = async (data: FuncionFormInputs) => {
     if (selectedDates.length === 0 || selectedTimes.length === 0) {
       alert("Debe seleccionar al menos una fecha y un horario.");
       return;
@@ -170,13 +168,12 @@ const FuncionForm: React.FC<FuncionFormProps> = ({ onClose }) => {
             sala: data.sala?.value || "",
             pelicula: data.pelicula?.value || "",
             precio: Number(data.precio),
-			tipo: data.tipo,
+			      tipo: data.tipo,
           };
-
           await createFuncion(funcionData);
         }
       }
-      onClose();
+      navigate("/admin/funciones"); 
     } catch (error) {
       setSubmitError(
         error instanceof Error ? error.message : "Error desconocido"
@@ -185,8 +182,9 @@ const FuncionForm: React.FC<FuncionFormProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 bg-white rounded-lg text-black">
+    <div className="p-4 max-w-md mx-auto">
       <h3 className="text-xl font-semibold mb-4 text-center">Crear Nuevas Funciones</h3>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="mb-4">
         <label className="block font-bold mb-2">Sala:</label>
         <Controller
@@ -328,18 +326,18 @@ const FuncionForm: React.FC<FuncionFormProps> = ({ onClose }) => {
         <button 
           type="submit" 
           className="px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-700 transition-colors"
-          onClick={handleSubmit(onSubmit)}
         >
           Crear Funciones
         </button>
         <button
           type="button"
-          onClick={onClose}
+          onClick={() => navigate("/admin/funciones")}
           className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition-colors"
         >
           Cancelar
         </button>
       </div>
+      </form>
     </div>
   );
 };

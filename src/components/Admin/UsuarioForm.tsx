@@ -1,7 +1,8 @@
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Usuario, UserType } from "../../types";
-import { createUsuario, updateUsuario } from "../../api/usuario";
+import { UserType, Usuario } from "../../types";
+import { createUsuario, getUsuario, updateUsuario } from "../../api/usuario";
+import { useParams, useNavigate } from "react-router-dom";
 
 const tiposUsuario = [
   { value: "comun", label: "Común" },
@@ -17,40 +18,51 @@ interface UsuarioFormInputs {
 }
 
 interface UsuarioFormProps {
-  usuario: Usuario | null;
-  onClose: () => void;
-  newUser?: boolean;
+  usuario?: Usuario | null;
+  onClose?: () => void;
+  isAdmin?: boolean;
 }
 
-const UsuarioForm: React.FC<UsuarioFormProps> = ({ usuario, onClose, newUser }) => {
+const UsuarioForm: React.FC<UsuarioFormProps> = ({ isAdmin }) => {
+  const { id } = useParams();
+  const isNewUser = !id;
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
   } = useForm<UsuarioFormInputs>({
-    defaultValues: usuario
-      ? {
+    defaultValues: async () => {
+      if (id) {
+        const usuarioResponse = await getUsuario(id);
+        const usuario = usuarioResponse.data;
+        return {
           nombre: usuario.nombre,
           email: usuario.email,
+          tipo: usuario.tipo,
           password: "",
-          tipo: usuario.tipo, 
-        }
-      : {
-          tipo: UserType.COMUN,
-        },
+        };
+      }
+      return {
+        nombre: "",
+        email: "",
+        password: "",
+        tipo: UserType.COMUN,
+      };
+    },
   });
 
   const onSubmit: SubmitHandler<UsuarioFormInputs> = async (data) => {
     try {
-      if (usuario) {
+      if (id) {
         const payload = {
           nombre: data.nombre,
           email: data.email,
           tipo: data.tipo,
           ...(data.password && { password: data.password }),
         };
-        await updateUsuario(usuario.id, payload);
+        await updateUsuario(id, payload);
       } else {
         if (!data.password) {
           throw new Error(
@@ -63,24 +75,32 @@ const UsuarioForm: React.FC<UsuarioFormProps> = ({ usuario, onClose, newUser }) 
           password: data.password,
           tipo: data.tipo,
         };
-        await createUsuario(payload);
+        if (id) {
+          await updateUsuario(id, payload);
+        } else {
+          await createUsuario(payload);
+        }
       }
-      onClose();
+      if (!isAdmin) {
+        navigate("/login");
+      } else {
+        navigate("/admin/usuarios");
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg max-w-[600px] mx-auto my-4 text-black">
+    <div className="bg-white p-4 rounded-lg max-w-[600px] mx-auto my-4">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <h3 className="text-xl font-semibold mb-4 text-center">
-          {usuario ? "Editar Usuario" : "Crear Nuevo Usuario"}
+        <h3 className="text-xl font-semibold mb-4 text-center text-black">
+          {id ? "Editar Usuario" : "Crear Nuevo Usuario"}
         </h3>
         <div className="space-y-2">
-          <label className="block font-bold mb-1">Nombre:</label>
+          <label className="block font-bold mb-1 text-black">Nombre:</label>
           <input
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className="w-full p-2 border border-gray-300 rounded-md bg-[#333]"
             {...register("nombre", { required: "Nombre es requerido" })}
           />
           {errors.nombre && (
@@ -88,10 +108,10 @@ const UsuarioForm: React.FC<UsuarioFormProps> = ({ usuario, onClose, newUser }) 
           )}
         </div>
         <div className="space-y-2">
-          <label className="block font-bold mb-1">Email:</label>
+          <label className="block font-bold mb-1 text-black">Email:</label>
           <input
             type="email"
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className="w-full p-2 border border-gray-300 rounded-md bg-[#333]"
             {...register("email", {
               required: "Email es requerido",
               pattern: {
@@ -104,11 +124,11 @@ const UsuarioForm: React.FC<UsuarioFormProps> = ({ usuario, onClose, newUser }) 
             <span className="text-red-500 text-sm">{errors.email.message}</span>
           )}
         </div>
-        {!newUser && (
+        {isAdmin && (
           <div className="space-y-2">
-            <label className="block font-bold mb-1">Tipo:</label>
+            <label className="block font-bold mb-1 text-black">Tipo:</label>
             <select
-              className="w-full p-2 border border-gray-300 rounded-md"
+              className="w-full p-2 border border-gray-300 rounded-md bg-[#333]"
               {...register("tipo", { required: "Tipo es requerido" })}
             >
               {tiposUsuario.map((tipo) => (
@@ -123,12 +143,12 @@ const UsuarioForm: React.FC<UsuarioFormProps> = ({ usuario, onClose, newUser }) 
           </div>
         )}
         <div className="space-y-2">
-          <label className="block font-bold mb-1">Contraseña:</label>
+          <label className="block font-bold mb-1 text-black">Contraseña:</label>
           <input
             type="password"
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className="w-full p-2 border border-gray-300 rounded-md bg-[#333]"
             {...register("password", {
-              required: !usuario && "Contraseña es requerida",
+              required: isNewUser ? "Contraseña es requerida" : false,
               minLength: {
                 value: 6,
                 message: "Mínimo 6 caracteres",
@@ -139,12 +159,12 @@ const UsuarioForm: React.FC<UsuarioFormProps> = ({ usuario, onClose, newUser }) 
             <span className="text-red-500 text-sm">{errors.password.message}</span>
           )}
         </div>
-        {!usuario && (
+        {!id && (
           <div className="space-y-2">
-            <label className="block font-bold mb-1">Confirmar Contraseña:</label>
+            <label className="block font-bold mb-1 text-black">Confirmar Contraseña:</label>
             <input
               type="password"
-              className="w-full p-2 border border-gray-300 rounded-md"
+              className="w-full p-2 border border-gray-300 rounded-md bg-[#333]"
               {...register("confirmPassword", {
                 validate: (value) =>
                   value === watch("password") || "Las contraseñas no coinciden",
@@ -160,11 +180,11 @@ const UsuarioForm: React.FC<UsuarioFormProps> = ({ usuario, onClose, newUser }) 
             type="submit"
             className="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800"
           >
-            {usuario ? "Guardar Cambios" : "Crear Usuario"}
+            {id ? "Guardar Cambios" : "Crear Usuario"}
           </button>
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => navigate("/admin/usuarios")} 
             className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300"
           >
             Cancelar

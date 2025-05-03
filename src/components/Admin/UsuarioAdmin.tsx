@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { Usuario } from "../../types";
 import { getUsuarios, deleteUsuario } from "../../api/usuario";
-import UsuarioForm from "./UsuarioForm";
+import { useNavigate } from "react-router-dom";
 
 const UsuarioAdmin = () => {
+  const navigate = useNavigate();
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
-  const [selectedUsuario, setSelectedUsuario] = useState<Usuario | null>(null);
-  const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -53,18 +52,11 @@ const UsuarioAdmin = () => {
   };
 
   const handleEdit = (usuario: Usuario) => {
-    setSelectedUsuario(usuario);
-    setShowForm(true);
+    navigate(`/admin/usuarios/${usuario.id}/editar`); 
   };
 
   const handleCreate = () => {
-    setSelectedUsuario(null);
-    setShowForm(true);
-  };
-
-  const handleFormClose = () => {
-    setShowForm(false);
-    loadUsuarios();
+    navigate("/admin/usuarios/nuevo");
   };
 
   return (
@@ -81,26 +73,26 @@ const UsuarioAdmin = () => {
         <table className="w-full border-collapse">
           <thead>
             <tr>
-              <th className="border border-gray-300 p-3 text-left bg-gray-100">Nombre</th>
-              <th className="border border-gray-300 p-3 text-left bg-gray-100">Email</th>
-              <th className="border border-gray-300 p-3 text-left bg-gray-100">Tipo</th>
-              <th className="border border-gray-300 p-3 text-left bg-gray-100">Acciones</th>
+              <th className="border p-3 bg-gray-100">Nombre</th>
+              <th className="border p-3 bg-gray-100">Email</th>
+              <th className="border p-3 bg-gray-100">Tipo</th>
+              <th className="border p-3 text-right bg-gray-100">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {currentItems.length === 0 ? (
               <tr>
-                <td className="border border-gray-300 p-3 text-center" colSpan={4}>
+                <td className="border p-3 text-center" colSpan={4}>
                   No hay usuarios
                 </td>
               </tr>
             ) : (
               currentItems.map((usuario) => (
                 <tr key={usuario.id}>
-                  <td className="border border-gray-300 p-3">{usuario.nombre}</td>
-                  <td className="border border-gray-300 p-3">{usuario.email}</td>
-                  <td className="border border-gray-300 p-3">{usuario.tipo}</td>
-                  <td className="border border-gray-300 p-3 text-right">
+                  <td className="border p-3">{usuario.nombre}</td>
+                  <td className="border p-3">{usuario.email}</td>
+                  <td className="border p-3">{usuario.tipo}</td>
+                  <td className="border p-3 text-right">
                     <button
                       onClick={() => handleEdit(usuario)}
                       className="ml-2 px-2.5 py-1.5 bg-gray-900 text-white rounded-md hover:bg-gray-800"
@@ -139,13 +131,6 @@ const UsuarioAdmin = () => {
           Siguiente
         </button>
       </div>
-      {showForm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-8">
-          <div className="bg-white p-8 rounded-lg shadow-xl max-w-[600px] w-full max-h-[90vh] overflow-y-auto">
-            <UsuarioForm usuario={selectedUsuario} onClose={handleFormClose} />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

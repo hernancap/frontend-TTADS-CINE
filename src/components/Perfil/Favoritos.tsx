@@ -42,6 +42,8 @@ const Favoritos = () => {
               <h3 className="text-xl font-semibold">{pelicula.nombre}</h3>
               <p className="mt-1">Género: {pelicula.genero}</p>
               <p className="mt-1">Duración: {pelicula.duracion} min</p>
+              <p className="mt-1">En Cartelera: {pelicula.enCartelera ? "Sí" : "No"}</p>
+              <p className="mt-1">Próximamente: {pelicula.proximamente ? "Sí" : "No"}</p>
             </li>
           ))}
         </ul>
