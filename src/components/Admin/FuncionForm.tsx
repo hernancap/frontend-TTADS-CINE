@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Pelicula, Sala, TipoFuncion } from "../../types";
 import { createFuncion } from "../../api/funcion";
@@ -38,7 +38,6 @@ const generateTimesArray = (): string[] => {
 };
 
 const FuncionForm: React.FC = () => {
-  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -54,12 +53,13 @@ const FuncionForm: React.FC = () => {
     },
   });
 
+  const navigate = useNavigate();
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
   const [blockedTimes, setBlockedTimes] = useState<Set<string>>(new Set());
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [daysArray, setDaysArray] = useState<Date[]>([]);
-  const timesArray = generateTimesArray();
+  const timesArray = useMemo(() => generateTimesArray(), []);
   const pelicula = watch("pelicula");
   const peliculaDuracion = pelicula?.duracion || 0;
 
@@ -182,11 +182,14 @@ const FuncionForm: React.FC = () => {
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto">
-      <h3 className="text-xl font-semibold mb-4 text-center">Crear Nuevas Funciones</h3>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <div className="p-4">
+      <form 
+      onSubmit={handleSubmit(onSubmit)} 
+      className="bg-white p-6 rounded-lg max-w-[600px] w-full mx-auto shadow-md space-y-4"
+      >
+      <h3 className="text-xl font-semibold mb-4 text-center text-black">Crear Nuevas Funciones</h3>
       <div className="mb-4">
-        <label className="block font-bold mb-2">Sala:</label>
+        <label className="block mb-2 font-bold text-black">Sala:</label>
         <Controller
           name="sala"
           control={control}
@@ -204,10 +207,23 @@ const FuncionForm: React.FC = () => {
                 control: (base) => ({
                   ...base,
                   borderColor: "#ddd",
-                  boxShadow: "none",
                   minHeight: "40px",
+                  boxShadow: "none",
+                  backgroundColor: "#333",
                 }),
-                menu: (base) => ({ ...base, zIndex: 9999 }),
+                menu: (base) => ({ 
+                  ...base, 
+                  zIndex: 9999
+                }),
+                option: (base) => ({
+                  ...base,
+                  color: "black",
+                  cursor: "pointer",
+                }),
+                singleValue: (base) => ({
+                  ...base,
+                  color: "white",
+                }),
               }}
               className="rounded"
             />
@@ -216,7 +232,7 @@ const FuncionForm: React.FC = () => {
         {errors.sala && <span className="text-red-500 text-sm mt-1">{errors.sala.message}</span>}
       </div>
       <div className="mb-4">
-        <label className="block font-bold mb-2">Película:</label>
+        <label className="block mb-2 font-bold text-black">Película:</label>
         <Controller
           name="pelicula"
           control={control}
@@ -234,10 +250,23 @@ const FuncionForm: React.FC = () => {
                 control: (base) => ({
                   ...base,
                   borderColor: "#ddd",
-                  boxShadow: "none",
                   minHeight: "40px",
+                  boxShadow: "none",
+                  backgroundColor: "#333",
                 }),
-                menu: (base) => ({ ...base, zIndex: 9999 }),
+                menu: (base) => ({ 
+                  ...base, 
+                  zIndex: 9999
+                }),
+                option: (base) => ({
+                  ...base,
+                  color: "black",
+                  cursor: "pointer",
+                }),
+                singleValue: (base) => ({
+                  ...base,
+                  color: "white",
+                }),
               }}
               className="rounded"
             />
@@ -246,10 +275,10 @@ const FuncionForm: React.FC = () => {
         {errors.pelicula && <span className="text-red-500 text-sm mt-1">{errors.pelicula.message}</span>}
       </div>
       <div className="mb-4">
-        <label className="block font-bold mb-2">Tipo de función:</label>
+        <label className="block mb-2 font-bold text-black">Tipo de función:</label>
         <select
           {...register("tipo", { required: "Seleccione el tipo de función" })}
-          className="w-full px-3 py-2 border border-gray-300 rounded text-base"
+          className="w-full px-3 py-2 border border-gray-300 rounded bg-[#333] text-white"
         >
           <option value={TipoFuncion.SUBTITULADA}>Subtitulada</option>
           <option value={TipoFuncion.DOBLADA}>Doblada / Español</option>
@@ -257,19 +286,19 @@ const FuncionForm: React.FC = () => {
         {errors.tipo && <span className="text-red-500 text-sm mt-1">{errors.tipo.message}</span>}
       </div>
       <div className="mb-4">
-        <label className="block font-bold mb-2">Precio:</label>
+        <label className="block mb-2 font-bold text-black">Precio:</label>
         <input
           type="number"
           {...register("precio", {
             required: "Ingrese el precio",
             min: { value: 1, message: "El precio mínimo es 1" },
           })}
-          className="w-full px-3 py-2 border border-gray-300 rounded"
+          className="w-full px-3 py-2 border border-gray-300 rounded bg-[#333] text-white"
         />
         {errors.precio && <span className="text-red-500 text-sm mt-1">{errors.precio.message}</span>}
       </div>
       <div className="mb-4">
-        <label className="block font-bold mb-2">Fechas:</label>
+        <label className="block mb-2 font-bold text-black">Fechas:</label>
         <div className="flex flex-wrap gap-2">
           {daysArray.map((day, index) => (
             <button
@@ -291,7 +320,7 @@ const FuncionForm: React.FC = () => {
         </div>
       </div>
       <div className="mb-4">
-        <label className="block font-bold mb-2">Horarios:</label>
+        <label className="block mb-2 font-bold text-black">Horarios:</label>
         <div className="flex flex-wrap gap-2">
           {timesArray.map((time, index) => {
             const isBlocked = blockedTimes.has(time) && !selectedTimes.includes(time);
