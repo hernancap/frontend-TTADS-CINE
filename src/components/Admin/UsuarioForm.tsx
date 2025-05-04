@@ -75,11 +75,7 @@ const UsuarioForm: React.FC<UsuarioFormProps> = ({ isAdmin }) => {
           password: data.password,
           tipo: data.tipo,
         };
-        if (id) {
-          await updateUsuario(id, payload);
-        } else {
           await createUsuario(payload);
-        }
       }
       if (!isAdmin) {
         navigate("/login");

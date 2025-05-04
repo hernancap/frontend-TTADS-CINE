@@ -141,6 +141,7 @@ const MovieDetail = () => {
                     <div className="flex flex-wrap gap-4">
                       {funcionesFiltradas
                         .filter(f => f.tipo === tipo)
+                        .sort((a, b) => new Date(a.fechaHora).getTime() - new Date(b.fechaHora).getTime())
                         .map((funcion) => (
                           <Link 
                             key={funcion.id} 

@@ -16,6 +16,29 @@ https://frontend-ttads-cine.onrender.com
 ## Repositorio del backend
 https://github.com/hernancap/backend-TTADS-CINE.git
 
+
+# Credenciales de Prueba
+
+## Usuarios de Prueba
+
+| Rol           | Email       | Contraseña  |
+|--------------|----------------------|-------------|
+| **Admin** | `admin@admin.com`               | `12345678`  |
+| **Cliente**      | `juan@mail.com`               | `juanjuan`  |
+
+---
+
+## Tarjeta para Pago Aprobado  
+
+| **Número de Tarjeta** | `4002 7686 9439 5619` |
+|-------------------------|----------------------|
+| **Código de Seguridad** | `123` |
+| **Fecha de Expiración** | `11/30` |
+| **Nombre en la Tarjeta** | `APRO` |
+| **DNI** | `12345678` |
+
+---
+
 # Para instalación local:
 
 ## Requisitos previos
@@ -45,9 +68,5 @@ https://github.com/hernancap/backend-TTADS-CINE.git
 # API URL (URL del backend de la aplicación)
 # En caso de no configurarlo, se asignará la siguiente URL por defecto:
 VITE_API_BASE_URL=http://localhost:3000/api
-
-# Puerto 
-# En caso de no configurarlo, se asignará el siguiente puerto por defecto:
-PORT=3000
 ```
 
