@@ -19,5 +19,35 @@ https://github.com/hernancap/backend-TTADS-CINE.git
 # Para instalación local:
 
 ## Requisitos previos
+- Node.js (versión 18.x o superior) y npm instalados.
 
+## Instalación y ejecución
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/hernancap/frontend-TTADS-CINE.git
+   cd frontend-TTADS-CINE
+   ```
+2. Instala las dependencias
+    ```bash
+    npm install
+    ```
+3. (OPCIONAL) Crea un archivo `.env.development` basado en el ejemplo proporcionado (ver sección de Variables de Entorno). 
+
+4. Ejecuta la aplicación en modo desarrollo
+    ```bash
+    npm run dev
+    ```
+---
+
+### **Configuración de variables de entorno**
+#### **Archivo `.env.development` de ejemplo:** 
+```env
+# API URL (URL del backend de la aplicación)
+# En caso de no configurarlo, se asignará la siguiente URL por defecto:
+VITE_API_BASE_URL=http://localhost:3000/api
+
+# Puerto 
+# En caso de no configurarlo, se asignará el siguiente puerto por defecto:
+PORT=3000
+```
 
