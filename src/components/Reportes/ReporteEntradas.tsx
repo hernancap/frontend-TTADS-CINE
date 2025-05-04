@@ -15,7 +15,12 @@ const ReporteEntradas: React.FC = () => {
 
   useEffect(() => {
     getReporteEntradasPorPelicula()
-      .then(setData)
+    .then((res) => {
+      const sortedData = res.slice().sort((a: ReporteEntradaPorPelicula, b: ReporteEntradaPorPelicula) => 
+        b.cantidad - a.cantidad
+      );
+      setData(sortedData);
+    })
       .catch(err => setError(err.message))
       .finally(() => setLoading(false));
   }, []);

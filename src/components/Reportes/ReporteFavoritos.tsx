@@ -15,7 +15,12 @@ const ReporteFavoritos: React.FC = () => {
 
   useEffect(() => {
     getReporteFavoritos()
-      .then(res => setData(res.data))
+      .then(res => {
+        const sortedData = res.data.slice().sort((a, b) => 
+          b.cantidadFavoritos - a.cantidadFavoritos
+        );
+      setData(sortedData);
+      })
       .catch(err => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
