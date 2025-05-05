@@ -8,6 +8,7 @@ import { es } from 'date-fns/locale';
 import { toZonedTime } from 'date-fns-tz';
 import { useAuth } from '../../hooks/useAuth';
 import { updateUsuario } from '../../api/usuario';
+const API = import.meta.env.VITE_API_BASE_URL.replace('/api','')
 
 const MovieDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -77,7 +78,7 @@ const MovieDetail = () => {
     <div className="max-w-[1200px] mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">{pelicula.nombre}</h1>
       <img 
-        src={pelicula.poster_path ? `http://localhost:3000/uploads/${pelicula.poster_path}` : 'src/assets/default_poster.jpeg'}
+        src={pelicula.poster_path ? `${API}/uploads/${pelicula.poster_path}` : 'src/assets/default_poster.jpeg'}
         alt={pelicula.nombre}
         className="w-full max-w-[300px] block mb-4 rounded-lg"
       />
