@@ -20,9 +20,11 @@ const Login: React.FC = () => {
 	} = useForm<LoginInputs>();
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [backendError, setBackendError] = useState<string | null>(null);
 
 	const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
 		setIsSubmitting(true);
+		setBackendError(null);
 		try {
 			const { token, user } = await loginService(
 				data.email,
@@ -34,6 +36,7 @@ const Login: React.FC = () => {
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error("Error de login:", error.message);
+				setBackendError(error.message);
 			}
 		} finally {
 			setIsSubmitting(false);
@@ -73,6 +76,9 @@ const Login: React.FC = () => {
 			>
 			  {isSubmitting ? "Iniciando..." : "Iniciar Sesión"}
 			</button>
+			{backendError && (
+        <div className="text-red-500 text-sm mt-1">{backendError}</div>
+      		)}
 		  </form>
 		  <p className="mt-4 text-sm text-center">
 			¿No tienes cuenta?{" "}
