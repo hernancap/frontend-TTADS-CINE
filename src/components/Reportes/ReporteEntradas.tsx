@@ -33,7 +33,7 @@ const ReporteEntradas: React.FC = () => {
       <h2 className="text-2xl font-semibold mb-4 text-white text-center">
         Entradas vendidas por película (últimos 7 días)
       </h2>
-      <div className="w-full h-80">
+      <div className="w-full h-[800px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
