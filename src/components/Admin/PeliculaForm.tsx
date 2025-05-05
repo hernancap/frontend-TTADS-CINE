@@ -192,6 +192,10 @@ const PeliculaForm: React.FC = () => {
                     boxShadow: "none",
                     backgroundColor: "#333",
                   }),
+                  input: (base) => ({
+                    ...base,
+                    color: "white",
+                  }),
                   menu: (base) => ({ ...base, zIndex: 9999 }),
                   option: (base) => ({
                     ...base,

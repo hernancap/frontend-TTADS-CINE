@@ -28,14 +28,14 @@ const ActorForm: React.FC<ActorFormProps> = ({ onClose, onActorCreated }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[1000]">
-      <div className="bg-white p-6 rounded-lg max-w-[400px] w-[90%] mx-auto">
-        <h3 className="text-xl font-semibold mt-0 text-center">Crear Actor</h3>
+      <div className="bg-white p-6 rounded-lg max-w-[400px] w-[90%] mx-auto text-black">
+        <h3 className="text-xl font-semibold mt-0 text-center text-black">Crear Actor</h3>
         <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
           <label className="block mb-2">
             Nombre:
             <input
               {...register('nombre', { required: 'El nombre es obligatorio' })}
-              className="w-full px-3 py-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
             />
             {errors.nombre && (
               <span className="text-red-500 text-sm block mt-1">{errors.nombre.message}</span>
