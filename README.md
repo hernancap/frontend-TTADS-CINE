@@ -27,8 +27,8 @@ https://github.com/hernancap/backend-TTADS-CINE.git
 
 | Rol           | Email       | Contraseña  |
 |--------------|----------------------|-------------|
-| **Admin** | `admin@admin.com`               | `12345678`  |
-| **Cliente**      | `juan@mail.com`               | `juanjuan`  |
+| **Admin** | `admin@admin.com`               | `adminadmin`  |
+| **Cliente**      | `luisp@mail.com`               | `luisperez`  |
 
 ---
 
