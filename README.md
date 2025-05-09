@@ -16,7 +16,7 @@ https://frontend-ttads-cine.onrender.com
 **Aclaración:** Render "duerme" las aplicaciones si están 15 minutos sin recibir tráfico, para luego reactivarlas al momento de recibir la primera solicitud. Puede pasar que esta primera solicitud que se haga al probar la app tarde varios segundos en responder (hasta que se termine de activar la app), pero luego debería funcionar correctamente.
 
 ## Repositorio del backend
-https://github.com/hernancap/backend-TTADS-CINE.git
+https://github.com/hernancap/backend-TTADS-CINE
 
 ## Video de demostración
 [Accede aquí al video de demostración (link de Youtube)](https://www.youtube.com/watch?v=T9uRGmsGdhM)
@@ -32,7 +32,7 @@ https://github.com/hernancap/backend-TTADS-CINE.git
 
 ---
 
-## Tarjeta para Pago Aprobado  
+## Tarjeta de DÉBITO para Pago Aprobado
 
 | **Número de Tarjeta** | `4002 7686 9439 5619` |
 |-------------------------|----------------------|
